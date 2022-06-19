@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Rick and Morty Aston</string>
+    <string name="check_connection">Check connection</string>
+    <string name="status">Status:</string>
+    <string name="gender">Gender:</string>
+    <string name="name">Name:</string>
+    <string name="species">Species:</string>
+    <string name="created">Created:</string>
+    <string name="something">Something</string>
+    <string name="characters">Character List</string>
+    <string name="search">Search</string>
+    <string name="image">Image</string>
 </resources>

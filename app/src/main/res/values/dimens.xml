@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="low_margin">8dp</dimen>
+    <dimen name="zero">0dp</dimen>
+    <dimen name="mid_margin">16dp</dimen>
+    <dimen name="mic_margin">4dp</dimen>
+    <dimen name="details_img_height">200dp</dimen>
+    <dimen name="cardview_elevation">2dp</dimen>
+    <dimen name="cardview_radius">16dp</dimen>
+</resources>
