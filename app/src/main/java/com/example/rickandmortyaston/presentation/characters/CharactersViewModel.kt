@@ -7,8 +7,9 @@ import com.example.rickandmortyaston.domain.characters.CharacterDomain
 import com.example.rickandmortyaston.domain.characters.RefreshCharactersUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class CharactersViewModel constructor(
+class CharactersViewModel @Inject constructor(
     private val refreshCharactersUseCase: RefreshCharactersUseCase
 ) : ViewModel() {
 
@@ -16,10 +17,10 @@ class CharactersViewModel constructor(
     val errorMessage = MutableLiveData<String>()
 
     init {
-        refreshDataFromRepository()
+        refreshData()
     }
 
-    private fun refreshDataFromRepository() {
+    private fun refreshData() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 characters.postValue(refreshCharactersUseCase.execute())
