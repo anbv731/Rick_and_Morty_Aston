@@ -16,16 +16,16 @@ class CharactersRepositoryImpl @Inject constructor(
     private val database = getDatabase(context)
 
 
-    override suspend fun refreshCharacters(): List<CharacterDomain> {
-        try {
-            val characters = RetrofitClient().getApi().getData().results
-            database.charactersDao.insertAll(characters.asModel())
-        } catch (e: Exception) {
-            println(e)
-        }
-        return database.charactersDao.getCharacters().asListDomainModel()
+    override suspend fun refreshCharacters() {
+        val characters = RetrofitClient().getApi().getData().results
+        database.charactersDao.insertAll(characters.asModel())
     }
+
     override suspend fun getCharacter(id: Int): CharacterDomain {
         return database.charactersDao.getIdCharacters(id).asDomainModel()
+    }
+
+    override suspend fun getCharacters(): List<CharacterDomain> {
+        return database.charactersDao.getCharacters().asListDomainModel()
     }
 }

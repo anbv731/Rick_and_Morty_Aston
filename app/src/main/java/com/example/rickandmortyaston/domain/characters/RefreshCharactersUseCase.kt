@@ -4,7 +4,7 @@ import javax.inject.Inject
 
 
 class RefreshCharactersUseCase @Inject constructor(private val repository: CharactersRepository) {
-    suspend fun execute():List<CharacterDomain> {
+    suspend fun execute() {
         return repository.refreshCharacters()
     }
 }
