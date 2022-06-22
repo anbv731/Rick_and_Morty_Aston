@@ -7,13 +7,15 @@ import androidx.lifecycle.viewModelScope
 import com.example.rickandmortyaston.domain.characters.CharacterDomain
 import com.example.rickandmortyaston.domain.characters.GetCharactersUseCase
 import com.example.rickandmortyaston.domain.characters.RefreshCharactersUseCase
+import com.example.rickandmortyaston.domain.characters.SearchCharactersUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class CharactersViewModel @Inject constructor(
     private val refreshCharactersUseCase: RefreshCharactersUseCase,
-    private val getCharactersUseCase:GetCharactersUseCase
+    private val getCharactersUseCase:GetCharactersUseCase,
+    private val searchCharactersUseCase: SearchCharactersUseCase
 ) : ViewModel() {
 
     private val _characters = MutableLiveData<List<CharacterDomain>>()
@@ -24,7 +26,7 @@ class CharactersViewModel @Inject constructor(
         refreshData()
     }
 
-    private fun refreshData() {
+    fun refreshData() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 refreshCharactersUseCase.execute()
@@ -35,5 +37,15 @@ class CharactersViewModel @Inject constructor(
             }
            _characters.postValue(getCharactersUseCase.execute())
         }
+    }
+    fun searchData(query:String){
+        viewModelScope.launch(Dispatchers.IO) {
+             val response =searchCharactersUseCase.execute(query)
+            if(response.size!=0)
+            {_characters.postValue(response)}
+            else {_characters.postValue(emptyList<CharacterDomain>())
+                errorMessage.postValue( _characters.value?.size.toString())}
+        }
+
     }
 }

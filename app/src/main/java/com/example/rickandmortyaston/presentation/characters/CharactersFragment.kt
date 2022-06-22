@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.rickandmortyaston.di.CharactersComponentProvider
 import java.util.*
 import javax.inject.Inject
@@ -23,6 +24,7 @@ class CharactersFragment: Fragment() {
     private lateinit var searchView: SearchView
     private lateinit var progressBar: ProgressBar
     private lateinit var adapter: RecyclerAdapter
+    private lateinit var swipe:SwipeRefreshLayout
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -40,6 +42,7 @@ class CharactersFragment: Fragment() {
        recyclerView = binding.recyclerCharacters
         searchView = binding.searchViewId
         progressBar = binding.progressBar
+        swipe=binding.swipeCharacters
         return root
     }
 
@@ -47,7 +50,20 @@ class CharactersFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         adapter = RecyclerAdapter(requireContext()) { id -> toItem() }
        recyclerView.adapter = adapter
+        swipe.setOnRefreshListener { viewModel.refreshData()
+            swipe.isRefreshing = false}
         setContent(null)
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextChange(text: String): Boolean {
+                setContent(text)
+                return false
+            }
+
+            override fun onQueryTextSubmit(query: String): Boolean {
+                setContent(query)
+                return false
+            }
+        })
     }
     private  fun toItem(){}
 
@@ -63,13 +79,13 @@ class CharactersFragment: Fragment() {
                 progressBar.visibility = View.INVISIBLE
                 Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
             }
-        } else {
-            viewModel.characters.observe(viewLifecycleOwner) {
-                adapter.setList(it.filter { character ->
-                    character.name.lowercase(Locale.getDefault())
-                        .contains(query.lowercase(Locale.getDefault()))
-                })
-            }
+        } else {viewModel.searchData(query)
+//            viewModel.characters.observe(viewLifecycleOwner) {
+//                adapter.setList(it.filter { character ->
+//                    character.name.lowercase(Locale.getDefault())
+//                        .contains(query.lowercase(Locale.getDefault()))
+//                })
+//            }
         }
     }
 }

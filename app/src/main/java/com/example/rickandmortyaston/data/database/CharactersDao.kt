@@ -15,4 +15,7 @@ interface CharactersDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(characters: List<CharacterDBEntity>)
+
+    @Query("select * from characters WHERE name LIKE '%' || :name || '%'")
+    fun searchCharacters(name: String): List<CharacterDBEntity>
 }
