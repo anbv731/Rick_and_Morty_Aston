@@ -11,6 +11,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.example.rickandmortyaston.R
 import com.example.rickandmortyaston.di.CharactersComponentProvider
 import java.util.*
 import javax.inject.Inject
@@ -55,7 +56,7 @@ class CharactersFragment: Fragment() {
         setContent(null)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextChange(text: String): Boolean {
-                setContent(text)
+                //setContent(text)
                 return false
             }
 
@@ -80,12 +81,10 @@ class CharactersFragment: Fragment() {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
             }
         } else {viewModel.searchData(query)
-//            viewModel.characters.observe(viewLifecycleOwner) {
-//                adapter.setList(it.filter { character ->
-//                    character.name.lowercase(Locale.getDefault())
-//                        .contains(query.lowercase(Locale.getDefault()))
-//                })
-//            }
+        viewModel.characters.observe(viewLifecycleOwner) {
+            adapter.setList(it)
+            if (it.isEmpty()) {Toast.makeText(requireContext(), R.string.nothingToShow, Toast.LENGTH_LONG).show()}
+        }
         }
     }
 }

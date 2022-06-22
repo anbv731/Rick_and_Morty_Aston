@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.rickandmortyaston.R
 import com.example.rickandmortyaston.domain.characters.CharacterDomain
 import com.example.rickandmortyaston.domain.characters.GetCharactersUseCase
 import com.example.rickandmortyaston.domain.characters.RefreshCharactersUseCase
@@ -41,10 +42,10 @@ class CharactersViewModel @Inject constructor(
     fun searchData(query:String){
         viewModelScope.launch(Dispatchers.IO) {
              val response =searchCharactersUseCase.execute(query)
-            if(response.size!=0)
-            {_characters.postValue(response)}
-            else {_characters.postValue(emptyList<CharacterDomain>())
-                errorMessage.postValue( _characters.value?.size.toString())}
+            _characters.postValue(response)
+//            if(response.isNotEmpty())
+//            {_characters.postValue(response)}
+//            else {_characters.postValue(emptyList<CharacterDomain>()) }
         }
 
     }
