@@ -11,4 +11,7 @@
     <string name="search">Search</string>
     <string name="image">Image</string>
     <string name="nothingToShow">Ничего не найдено</string>
+    <string name="charMenu">Characters</string>
+    <string name="locMenu">Locations</string>
+    <string name="epMenu">Episodes</string>
 </resources>

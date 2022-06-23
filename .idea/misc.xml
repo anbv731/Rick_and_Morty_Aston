@@ -3,8 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/tatiana/StudioProjects/RickandMortyAston/app/src/main/res/layout/activity_main.xml" value="0.264" />
         <entry key="..\:/Users/tatiana/StudioProjects/RickandMortyAston/app/src/main/res/layout/characters_fragment.xml" value="0.2957427536231884" />
         <entry key="..\:/Users/tatiana/StudioProjects/RickandMortyAston/app/src/main/res/layout/item.xml" value="0.146875" />
+        <entry key="..\:/Users/tatiana/StudioProjects/RickandMortyAston/app/src/main/res/menu/bottom_menu.xml" value="0.4" />
       </map>
     </option>
   </component>
