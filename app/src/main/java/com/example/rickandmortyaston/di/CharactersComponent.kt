@@ -1,9 +1,9 @@
 package com.example.rickandmortyaston.di
 
 import android.content.Context
+import com.example.rickandmortyaston.presentation.characters.CharacterDetailFragment
 import com.example.rickandmortyaston.presentation.characters.CharactersFragment
 import dagger.BindsInstance
-import dagger.Component
 import dagger.Subcomponent
 
 
@@ -16,5 +16,6 @@ interface CharactersComponent {
     }
 
     fun injectCharactersFragment(target: CharactersFragment)
+    fun injectCharactersDetailFragment(target: CharacterDetailFragment)
 
 }

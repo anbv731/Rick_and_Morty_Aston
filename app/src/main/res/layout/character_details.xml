@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/light_gray">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBarLayoutDetail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/topAppBarDetail"
+                style="@style/Widget.MaterialComponents.Toolbar.Primary"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:navigationIcon="?attr/homeAsUpIndicator" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/low_margin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/appBarLayoutDetail"
+            app:cardCornerRadius="@dimen/cardview_radius"
+            app:cardElevation="@dimen/cardview_default_elevation"
+            app:cardUseCompatPadding="true">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/imageViewCharacterDetail"
+                    android:layout_width="@dimen/zero"
+                    android:layout_height="@dimen/zero"
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/guideline5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:srcCompat="@tools:sample/avatars"
+                    android:contentDescription="@string/image" />
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.5" />
+
+                <TextView
+                    android:id="@+id/textViewDetailName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/mid_margin"
+                    android:layout_marginTop="@dimen/mid_margin"
+                    android:text="@string/name"
+                    app:layout_constraintStart_toEndOf="@+id/guideline5"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/textViewDetailNameData"
+                    android:layout_width="@dimen/zero"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/mic_margin"
+                    android:layout_marginTop="@dimen/mid_margin"
+                    android:layout_marginEnd="@dimen/mid_margin"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/textViewDetailName"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/textViewDetailGender"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/mid_margin"
+                    android:layout_marginTop="@dimen/mid_margin"
+                    android:text="@string/gender"
+                    app:layout_constraintStart_toEndOf="@+id/guideline5"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewDetailNameData" />
+
+                <TextView
+                    android:id="@+id/textViewDetailGenderData"
+                    android:layout_width="@dimen/zero"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/mic_margin"
+                    android:layout_marginTop="@dimen/mid_margin"
+                    android:layout_marginEnd="@dimen/mid_margin"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/textViewDetailGender"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewDetailNameData" />
+
+                <TextView
+                    android:id="@+id/textViewDetailStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/mid_margin"
+                    android:layout_marginTop="@dimen/mid_margin"
+                    android:text="@string/status"
+                    app:layout_constraintStart_toEndOf="@+id/guideline5"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewDetailGenderData" />
+
+                <TextView
+                    android:id="@+id/textViewDetailStatusData"
+                    android:layout_width="@dimen/zero"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/mic_margin"
+                    android:layout_marginTop="@dimen/mid_margin"
+                    android:layout_marginEnd="@dimen/mid_margin"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/textViewDetailStatus"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewDetailGenderData" />
+
+                <TextView
+                    android:id="@+id/textViewDetailSpecies"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/mid_margin"
+                    android:layout_marginTop="@dimen/mid_margin"
+                    android:text="@string/species"
+                    app:layout_constraintStart_toEndOf="@+id/guideline5"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewDetailStatusData" />
+
+                <TextView
+                    android:id="@+id/textViewDetailSpeciesData"
+                    android:layout_width="@dimen/zero"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/mic_margin"
+                    android:layout_marginTop="@dimen/mid_margin"
+                    android:layout_marginEnd="@dimen/mid_margin"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/textViewDetailSpecies"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewDetailStatusData" />
+
+
+                <TextView
+                    android:id="@+id/textViewDetailCreated"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/mid_margin"
+                    android:layout_marginTop="@dimen/mid_margin"
+                    android:text="@string/created"
+                    app:layout_constraintStart_toEndOf="@+id/guideline5"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewDetailSpeciesData" />
+
+                <TextView
+                    android:id="@+id/textViewDetailCreatedData"
+                    android:layout_width="@dimen/zero"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/mic_margin"
+                    android:layout_marginTop="@dimen/mid_margin"
+                    android:layout_marginEnd="@dimen/mid_margin"
+                    android:layout_marginBottom="@dimen/mid_margin"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/textViewDetailCreated"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewDetailSpeciesData" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -52,7 +52,7 @@ class CharactersFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = RecyclerAdapter(requireContext()) { id -> toItem() }
+        adapter = RecyclerAdapter(requireContext()) { id -> toItem(id) }
         recyclerView.adapter = adapter
         swipe.setOnRefreshListener {
            if(searchView.query==null) {viewModel.refreshData()}
@@ -94,5 +94,14 @@ class CharactersFragment : Fragment() {
             viewModel.searchData(query)
         }
     }
-    private fun toItem() {}
+    private fun toItem(id: Int) {
+        val arg = Bundle()
+        arg.putInt("id",id)
+        val fragment=CharacterDetailFragment()
+        fragment.arguments=arg
+        activity?.supportFragmentManager?.beginTransaction()
+            ?.replace(R.id.fragmentPlace, fragment, null)
+            ?.addToBackStack(null)
+            ?.commit()
+    }
 }
