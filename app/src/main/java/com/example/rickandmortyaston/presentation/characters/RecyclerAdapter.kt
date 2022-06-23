@@ -3,8 +3,10 @@ package com.example.rickandmortyaston.presentation.characters
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.rickandmortyaston.R
 import com.example.rickandmortyaston.databinding.ItemBinding
 import com.example.rickandmortyaston.domain.characters.CharacterDomain
 

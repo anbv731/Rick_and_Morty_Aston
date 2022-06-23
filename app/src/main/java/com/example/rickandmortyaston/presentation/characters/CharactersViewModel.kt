@@ -41,12 +41,8 @@ class CharactersViewModel @Inject constructor(
     }
     fun searchData(query:String){
         viewModelScope.launch(Dispatchers.IO) {
-             val response =searchCharactersUseCase.execute(query)
+             val response=searchCharactersUseCase.execute(query)
             _characters.postValue(response)
-//            if(response.isNotEmpty())
-//            {_characters.postValue(response)}
-//            else {_characters.postValue(emptyList<CharacterDomain>()) }
         }
-
     }
 }

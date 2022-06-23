@@ -9,23 +9,26 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.rickandmortyaston.R
-import com.example.rickandmortyaston.di.CharactersComponentProvider
-import java.util.*
-import javax.inject.Inject
 import com.example.rickandmortyaston.databinding.CharactersFragmentBinding
+import com.example.rickandmortyaston.di.CharactersComponentProvider
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class CharactersFragment: Fragment() {
+class CharactersFragment : Fragment() {
     @Inject
     lateinit var viewModel: CharactersViewModel
-    private lateinit var binding:CharactersFragmentBinding
+    private lateinit var binding: CharactersFragmentBinding
     private lateinit var recyclerView: RecyclerView
     private lateinit var searchView: SearchView
     private lateinit var progressBar: ProgressBar
     private lateinit var adapter: RecyclerAdapter
-    private lateinit var swipe:SwipeRefreshLayout
+    private lateinit var swipe: SwipeRefreshLayout
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -40,23 +43,32 @@ class CharactersFragment: Fragment() {
     ): View {
         binding = CharactersFragmentBinding.inflate(inflater, container, false)
         val root: View = binding.root
-       recyclerView = binding.recyclerCharacters
+        recyclerView = binding.recyclerCharacters
         searchView = binding.searchViewId
         progressBar = binding.progressBar
-        swipe=binding.swipeCharacters
+        swipe = binding.swipeCharacters
         return root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         adapter = RecyclerAdapter(requireContext()) { id -> toItem() }
-       recyclerView.adapter = adapter
-        swipe.setOnRefreshListener { viewModel.refreshData()
-            swipe.isRefreshing = false}
+        recyclerView.adapter = adapter
+        swipe.setOnRefreshListener {
+           if(searchView.query==null) {viewModel.refreshData()}
+            else{viewModel.searchData(searchView.query.toString())}
+
+            swipe.isRefreshing = false
+        }
         setContent(null)
+        var queryTextChangedJob: Job? = null
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextChange(text: String): Boolean {
-                //setContent(text)
+                queryTextChangedJob?.cancel()
+                queryTextChangedJob = lifecycleScope.launch {
+                    delay(1000)
+                    setContent(text)
+                }
                 return false
             }
 
@@ -66,25 +78,21 @@ class CharactersFragment: Fragment() {
             }
         })
     }
-    private  fun toItem(){}
 
     private fun setContent(query: String?) {
         if (query == null) {
             viewModel.characters.observe(viewLifecycleOwner) {
-                if (it.isNotEmpty()) {
-                    adapter.setList(it)
-                    progressBar.visibility = View.INVISIBLE
-                }
+                adapter.setList(it)
+                if(it.isEmpty()){Toast.makeText(requireContext(), R.string.nothingToShow, Toast.LENGTH_LONG).show()}
+                progressBar.visibility = View.INVISIBLE
             }
             viewModel.errorMessage.observe(viewLifecycleOwner) {
                 progressBar.visibility = View.INVISIBLE
                 Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
             }
-        } else {viewModel.searchData(query)
-        viewModel.characters.observe(viewLifecycleOwner) {
-            adapter.setList(it)
-            if (it.isEmpty()) {Toast.makeText(requireContext(), R.string.nothingToShow, Toast.LENGTH_LONG).show()}
-        }
+        } else {
+            viewModel.searchData(query)
         }
     }
+    private fun toItem() {}
 }
