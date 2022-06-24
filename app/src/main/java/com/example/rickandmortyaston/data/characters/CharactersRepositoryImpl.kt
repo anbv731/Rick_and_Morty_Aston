@@ -6,6 +6,7 @@ import com.example.characters.data.database.asListDomainModel
 import com.example.characters.data.database.getDatabase
 import com.example.characters.data.network.RetrofitClient
 import com.example.characters.data.network.asModel
+import com.example.rickandmortyaston.R
 import com.example.rickandmortyaston.domain.characters.CharacterDomain
 import com.example.rickandmortyaston.domain.characters.CharactersRepository
 import javax.inject.Inject
@@ -14,22 +15,40 @@ class CharactersRepositoryImpl @Inject constructor(
     private val context: Context,
 ) : CharactersRepository {
     private val database = getDatabase(context)
+    private var page = 1
+    private var maxPage = 1
 
 
-    override suspend fun refreshCharacters() {
-        val characters = RetrofitClient().getApi().getData().results
-        database.charactersDao.insertAll(characters.asModel())
+    override suspend fun getCharacters(refresh: Boolean): List<CharacterDomain> {
+        if (refresh) {
+            page = 1
+            val result = RetrofitClient().getApi().getPageData(page)
+            maxPage = result.info.pages.toInt()
+            val characters = result.results
+            database.charactersDao.deleteCharacters()
+            database.charactersDao.insertAll(characters.asModel())
+            return database.charactersDao.getCharacters().asListDomainModel()
+        } else if (page < maxPage) {
+            page++
+            val result = RetrofitClient().getApi().getPageData(page)
+            val characters = result.results
+            database.charactersDao.insertAll(characters.asModel())
+            return database.charactersDao.getCharacters().asListDomainModel()
+        } else {
+            throw Exception(context.getString(R.string.theEnd))
+        }
     }
 
     override suspend fun getCharacter(id: Int): CharacterDomain {
+        println("call getCharacter maxpage $maxPage")
         return database.charactersDao.getIdCharacters(id).asDomainModel()
     }
 
-    override suspend fun getCharacters(): List<CharacterDomain> {
-        return database.charactersDao.getCharacters().asListDomainModel()
+    override suspend fun searchCharacters(query: String): List<CharacterDomain> {
+        return database.charactersDao.searchCharacters(query).asListDomainModel()
     }
 
-    override suspend fun searchCharacters(query:String): List<CharacterDomain> {
-        return database.charactersDao.searchCharacters(query).asListDomainModel()
+    override suspend fun getDBCharacters(): List<CharacterDomain> {
+       return database.charactersDao.getCharacters().asListDomainModel()
     }
 }

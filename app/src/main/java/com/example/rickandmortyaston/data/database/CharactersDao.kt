@@ -18,4 +18,7 @@ interface CharactersDao {
 
     @Query("select * from characters WHERE name LIKE '%' || :name || '%'")
     fun searchCharacters(name: String): List<CharacterDBEntity>
+
+    @Query("delete from characters")
+    fun deleteCharacters()
 }

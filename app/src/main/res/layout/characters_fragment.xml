@@ -25,35 +25,40 @@
                 android:layout_height="?attr/actionBarSize"
                 app:title="@string/characters">
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/mic_margin"
+                    android:layout_gravity="end"
+                    app:srcCompat="@drawable/ic_baseline_filter_alt_24" />
+
                 <androidx.appcompat.widget.SearchView
                     android:id="@+id/searchViewId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="end">
-
-                </androidx.appcompat.widget.SearchView>
+                    android:layout_gravity="end" />
             </com.google.android.material.appbar.MaterialToolbar>
 
         </com.google.android.material.appbar.AppBarLayout>
 
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-    android:id="@+id/swipeCharacters"
-    android:layout_width="match_parent"
-    android:layout_height="0dp"
-    app:layout_constraintTop_toBottomOf="@id/appBarLayoutId"
-    app:layout_constraintBottom_toBottomOf="parent"
-    >
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerCharacters"
-            android:layout_width="@dimen/zero"
-            android:layout_height="@dimen/zero"
-            android:background="@color/light_gray"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/appBarLayoutId"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-           />
-</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeCharacters"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/appBarLayoutId">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerCharacters"
+                android:layout_width="@dimen/zero"
+                android:layout_height="@dimen/zero"
+                android:background="@color/light_gray"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/appBarLayoutId" />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
         <ProgressBar
             android:id="@+id/progressBar"
             android:layout_width="wrap_content"

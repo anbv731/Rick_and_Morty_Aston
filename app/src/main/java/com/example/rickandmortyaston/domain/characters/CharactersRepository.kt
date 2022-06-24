@@ -1,8 +1,8 @@
 package com.example.rickandmortyaston.domain.characters
 
 interface CharactersRepository {
-    suspend fun refreshCharacters()
+    suspend fun getCharacters(refresh:Boolean):List<CharacterDomain>
+    suspend fun getDBCharacters():List<CharacterDomain>
     suspend fun getCharacter(id:Int): CharacterDomain
-    suspend fun getCharacters():List<CharacterDomain>
     suspend fun searchCharacters(query:String):List<CharacterDomain>
 }

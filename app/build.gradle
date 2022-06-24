@@ -66,4 +66,6 @@ dependencies {
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
     implementation 'com.google.android.material:material:1.7.0-alpha02'
+
+    implementation "androidx.paging:paging-runtime:3.0.0-alpha03"
 }

@@ -52,56 +52,58 @@ class CharactersFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = RecyclerAdapter(requireContext()) { id -> toItem(id) }
+        adapter = RecyclerAdapter(requireContext(), { id -> toItem(id) }, { nextPage() })
         recyclerView.adapter = adapter
+        setContent()
         swipe.setOnRefreshListener {
-           if(searchView.query==null) {viewModel.refreshData()}
-            else{viewModel.searchData(searchView.query.toString())}
-
+            if (searchView.query.isEmpty()) {
+                viewModel.refreshData()
+            } else {
+                viewModel.searchData(searchView.query.toString())
+            }
             swipe.isRefreshing = false
         }
-        setContent(null)
         var queryTextChangedJob: Job? = null
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextChange(text: String): Boolean {
                 queryTextChangedJob?.cancel()
                 queryTextChangedJob = lifecycleScope.launch {
                     delay(1000)
-                    setContent(text)
+                    viewModel.searchData(text)
                 }
                 return false
             }
 
             override fun onQueryTextSubmit(query: String): Boolean {
-                setContent(query)
+                viewModel.searchData(query)
                 return false
             }
         })
     }
 
-    private fun setContent(query: String?) {
-        if (query == null) {
+    private fun setContent() {
             viewModel.characters.observe(viewLifecycleOwner) {
                 adapter.setList(it)
-                if(it.isEmpty()){Toast.makeText(requireContext(), R.string.nothingToShow, Toast.LENGTH_LONG).show()}
                 progressBar.visibility = View.INVISIBLE
             }
             viewModel.errorMessage.observe(viewLifecycleOwner) {
                 progressBar.visibility = View.INVISIBLE
                 Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
             }
-        } else {
-            viewModel.searchData(query)
         }
-    }
+
     private fun toItem(id: Int) {
         val arg = Bundle()
-        arg.putInt("id",id)
-        val fragment=CharacterDetailFragment()
-        fragment.arguments=arg
+        arg.putInt("id", id)
+        val fragment = CharacterDetailFragment()
+        fragment.arguments = arg
         activity?.supportFragmentManager?.beginTransaction()
             ?.replace(R.id.fragmentPlace, fragment, null)
             ?.addToBackStack(null)
             ?.commit()
+    }
+    private fun nextPage(){
+        progressBar.visibility = View.VISIBLE
+        viewModel.nextPage()
     }
 }
