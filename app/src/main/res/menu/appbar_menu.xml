@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/filters"
+        android:title="@string/filters"
+        android:orderInCategory="101"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_baseline_filter_alt_24">
+
+        <menu>
+
+            <item android:id="@+id/action_status"
+                app:showAsAction="ifRoom"
+                android:title="@string/status" />
+            <item android:id="@+id/action_gender"
+                app:showAsAction="ifRoom"
+                android:title="@string/gender" />
+            <item android:id="@+id/action_species"
+                app:showAsAction="ifRoom"
+                android:title="@string/species" />
+            <item android:id="@+id/action_type"
+                app:showAsAction="ifRoom"
+                android:title="@string/type" />
+
+        </menu>
+
+    </item>
+</menu>

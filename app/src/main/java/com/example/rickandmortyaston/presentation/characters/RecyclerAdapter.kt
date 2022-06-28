@@ -19,11 +19,9 @@ class RecyclerAdapter(
     RecyclerView.Adapter<RecyclerAdapter.CharactersViewHolder>() {
     var characters = mutableListOf<CharacterDomain>()
     private var isPageLoading=false
-
     fun setList(list: List<CharacterDomain>) {
         this.characters = list.toMutableList()
         notifyDataSetChanged()
-        println("notifi"+ isPageLoading)
         isPageLoading=false
     }
 

@@ -7,6 +7,7 @@ data class CharacterDomain(
     val species: String,
     val gender: String,
     val created: String,
+    val type: String,
   //  val location:String,
    // val origin: String,
   //  val episode:List<String>,

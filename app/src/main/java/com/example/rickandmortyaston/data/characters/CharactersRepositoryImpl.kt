@@ -9,6 +9,8 @@ import com.example.characters.data.network.asModel
 import com.example.rickandmortyaston.R
 import com.example.rickandmortyaston.domain.characters.CharacterDomain
 import com.example.rickandmortyaston.domain.characters.CharactersRepository
+import com.example.rickandmortyaston.domain.characters.Request
+import com.example.rickandmortyaston.domain.characters.Status
 import javax.inject.Inject
 
 class CharactersRepositoryImpl @Inject constructor(
@@ -19,10 +21,10 @@ class CharactersRepositoryImpl @Inject constructor(
     private var maxPage = 1
 
 
-    override suspend fun getCharacters(refresh: Boolean): List<CharacterDomain> {
+    override suspend fun getCharacters(refresh: Boolean,request: Request): List<CharacterDomain> {
         if (refresh) {
             page = 1
-            val result = RetrofitClient().getApi().getPageData(page)
+            val result = RetrofitClient().getApi().getPageData(page, request.name,request.status,request.gender,request.species,request.type)
             maxPage = result.info.pages.toInt()
             val characters = result.results
             database.charactersDao.deleteCharacters()
@@ -30,7 +32,7 @@ class CharactersRepositoryImpl @Inject constructor(
             return database.charactersDao.getCharacters().asListDomainModel()
         } else if (page < maxPage) {
             page++
-            val result = RetrofitClient().getApi().getPageData(page)
+            val result = RetrofitClient().getApi().getPageData(page,request.name,request.status,request.gender,request.species,request.type)
             val characters = result.results
             database.charactersDao.insertAll(characters.asModel())
             return database.charactersDao.getCharacters().asListDomainModel()

@@ -2,12 +2,10 @@ package com.example.rickandmortyaston.presentation.characters
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.ProgressBar
-import android.widget.Toast
+import android.view.*
+import android.widget.*
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
@@ -15,6 +13,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.rickandmortyaston.R
 import com.example.rickandmortyaston.databinding.CharactersFragmentBinding
 import com.example.rickandmortyaston.di.CharactersComponentProvider
+import com.example.rickandmortyaston.domain.characters.Status
+import com.google.android.material.appbar.MaterialToolbar
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -23,17 +23,26 @@ import javax.inject.Inject
 class CharactersFragment : Fragment() {
     @Inject
     lateinit var viewModel: CharactersViewModel
+    private lateinit var filter:ImageView
     private lateinit var binding: CharactersFragmentBinding
     private lateinit var recyclerView: RecyclerView
     private lateinit var searchView: SearchView
     private lateinit var progressBar: ProgressBar
     private lateinit var adapter: RecyclerAdapter
     private lateinit var swipe: SwipeRefreshLayout
+    private lateinit var dialog:DialogFragment
+    private lateinit var toolbar: MaterialToolbar
+    private var filterId=0
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         (requireActivity().application as CharactersComponentProvider).provideCharactersComponent()
             .injectCharactersFragment(this)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -47,6 +56,15 @@ class CharactersFragment : Fragment() {
         searchView = binding.searchViewId
         progressBar = binding.progressBar
         swipe = binding.swipeCharacters
+        toolbar=binding.AppBarId
+        toolbar.setOnMenuItemClickListener {  when(it.itemId) {
+            R.id.action_status -> filtration(0)
+            R.id.action_gender->filtration(1)
+            R.id.action_species->filtration(2)
+            R.id.action_type->filtration(3)
+
+        }
+            true }
         return root
     }
 
@@ -79,6 +97,7 @@ class CharactersFragment : Fragment() {
                 return false
             }
         })
+       // filter.setOnClickListener{filtration()}
     }
 
     private fun setContent() {
@@ -106,4 +125,69 @@ class CharactersFragment : Fragment() {
         progressBar.visibility = View.VISIBLE
         viewModel.nextPage()
     }
+    private fun filtration (item:Int){
+        var types = arrayListOf(
+            "Genetic experiment",
+            "Superhuman (Ghost trains summoner)",
+            "Parasite",
+            "Human with antennae",
+            "Human with ants in his eyes",
+            "Fish-Person",
+            "Cromulon",
+            "Self-aware arm",
+            "Cat-Person",
+            "Human with baby legs",
+            "Bepisian",
+            "Hivemind",
+            "Mytholog",
+            "Human with giant head",
+            "Dog",
+            "Bird-Person",
+            "Korblock",
+            "Boobloosian",
+            "Elephant-Person",
+            "Superhuman",
+            "Gromflomite",
+            "Centaur",
+            "Organic gun",
+            "Microverse inhabitant",
+            "Vampire",
+            "Light bulb-Alien",
+            "Animal",
+            "Robot-Crocodile hybrid",
+            "Zigerion",
+            "Giant",
+            "Cone-nippled alien",
+            "Demon",
+            "Shapeshifter",
+            "Game"
+        )
+        val args=Bundle()
+        if (item==3){
+            args.putStringArrayList("list", types)
+            args.putInt("selected",2)
+        }else if(item==0){
+            val list= mutableListOf<String>()
+                Status.values().forEach { list.add(it.name) }
+            args.putStringArray("list",list.toTypedArray())
+
+            args.putInt("selected",viewModel._request.status?.ordinal?:-1)
+            println(args.getStringArray("list")?.size)
+        }
+        filterId=item
+        dialog=Dialog()
+       dialog.arguments=args
+        println(args.getStringArray("list"))
+
+       dialog.show(childFragmentManager,"Dialog")
+
+    }
+    fun input(value:Int){
+        when(filterId){
+            0-> viewModel.changeStatus(value)
+            1->viewModel.changeGender(value)
+            2->viewModel.changeSpecies(value)
+        }
+    }
+
 }

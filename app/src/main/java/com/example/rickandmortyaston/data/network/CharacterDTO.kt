@@ -16,6 +16,8 @@ data class CharacterDto constructor(
     val gender: String,
     @Json(name = "created")
     val created: String,
+    @Json(name = "type")
+    val type: String,
     @Json(name = "image")
     val image: String,
 
@@ -30,7 +32,8 @@ fun List<CharacterDto>.asModel(): List<CharacterDBEntity> {
             species = it.species,
             created = it.created,
             image = it.image,
-            gender = it.gender
+            gender = it.gender,
+            type = it.type
         )
     }
 }
