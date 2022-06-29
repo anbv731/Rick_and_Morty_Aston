@@ -1,6 +1,7 @@
 package com.example.characters.data.network
 
 import com.example.rickandmortyaston.data.characters.ResponseCharacters
+import com.example.rickandmortyaston.data.episodes.ResponseEpisodes
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -19,5 +20,5 @@ interface NetworkService {
         @Query("page") page:Int?,
         @Query("name") name:String?,
         @Query("episode") episode: String?
-    ): ResponseCharacters
+    ): ResponseEpisodes
 }
