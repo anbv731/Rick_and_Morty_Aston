@@ -3,12 +3,10 @@ package com.example.rickandmortyaston.data.characters
 import android.content.Context
 import com.example.characters.data.database.getDatabase
 import com.example.characters.data.network.RetrofitClient
-import com.example.characters.data.network.asModel
 import com.example.rickandmortyaston.R
 import com.example.rickandmortyaston.domain.characters.CharacterDomain
 import com.example.rickandmortyaston.domain.characters.CharactersRepository
 import com.example.rickandmortyaston.domain.characters.Request
-import com.example.rickandmortyaston.domain.characters.Status
 import javax.inject.Inject
 
 class CharactersRepositoryImpl @Inject constructor(
@@ -22,7 +20,7 @@ class CharactersRepositoryImpl @Inject constructor(
     override suspend fun getCharacters(refresh:Boolean,nextPage: Boolean,request: Request): List<CharacterDomain> {
         if (!nextPage) {
             page = 1
-            val result = RetrofitClient().getApi().getPageData(page, request.name,request.status,request.gender,request.species,request.type)
+            val result = RetrofitClient().getApi().getCharactersData(page, request.name,request.status,request.gender,request.species,request.type)
             maxPage = result.info.pages.toInt()
             val characters = result.results
             if(refresh)database.charactersDao.deleteCharacters()
@@ -30,7 +28,7 @@ class CharactersRepositoryImpl @Inject constructor(
             return database.charactersDao.searchCharacters(request.name,request.status,request.gender,request.species,request.type).asListDomainModel()
         } else if (page < maxPage) {
             page++
-            val result = RetrofitClient().getApi().getPageData(page,request.name,request.status,request.gender,request.species,request.type)
+            val result = RetrofitClient().getApi().getCharactersData(page,request.name,request.status,request.gender,request.species,request.type)
             val characters = result.results
             database.charactersDao.insertAll(characters.asModel())
             return database.charactersDao.searchCharacters(request.name,request.status,request.gender,request.species,request.type).asListDomainModel()
@@ -46,7 +44,7 @@ class CharactersRepositoryImpl @Inject constructor(
 
     override suspend fun refreshCharacters(request: Request): List<CharacterDomain> {
         page = 1
-        val result = RetrofitClient().getApi().getPageData(page, request.name,request.status,request.gender,request.species,request.type)
+        val result = RetrofitClient().getApi().getCharactersData(page, request.name,request.status,request.gender,request.species,request.type)
         val characters = result.results
         database.charactersDao.deleteCharacters()
         database.charactersDao.insertAll(characters.asModel())
