@@ -35,6 +35,9 @@ class RecyclerAdapter(
         val character = characters[position]
 
         holder.textViewName.text = (character.name)
+        holder.textViewSpecies.text=character.species
+        holder.textViewStatus.text=character.status
+        holder.textViewGender.text=character.gender
         Glide.with(context)
             .load(character.image)
             .circleCrop()
@@ -52,15 +55,17 @@ class RecyclerAdapter(
         val textViewName = binding.nameTextView
         val imageView = binding.imageView
         val cardView = binding.CardViewId
+        val textViewSpecies = binding.speciesTextView
+        val textViewStatus = binding.statusTextView
+        val textViewGender=binding.genderTextView
     }
 
     override fun onViewAttachedToWindow(holder: CharactersViewHolder) {
         super.onViewAttachedToWindow(holder)
         val layoutPosition = holder.layoutPosition
         if(layoutPosition==characters.size-1 && !isPageLoading) {
-            println(isPageLoading)
+            println("isPageLoading "+isPageLoading)
             isPageLoading=true
-
             nextPage()
         }
     }

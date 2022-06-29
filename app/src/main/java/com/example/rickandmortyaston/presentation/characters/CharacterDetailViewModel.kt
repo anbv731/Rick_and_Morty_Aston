@@ -5,14 +5,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.rickandmortyaston.R
 import com.example.rickandmortyaston.domain.characters.*
+import com.example.rickandmortyaston.domain.characters.use_cases.GetCharacterUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class CharacterDetailViewModel @Inject constructor(
-    private val getCharacterUseCase:GetCharacterUseCase
+    private val getCharacterUseCase: GetCharacterUseCase
 ) : ViewModel() {
 
     private val _character = MutableLiveData<CharacterDomain>()

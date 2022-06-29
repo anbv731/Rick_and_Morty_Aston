@@ -16,8 +16,14 @@ interface CharactersDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(characters: List<CharacterDBEntity>)
 
-    @Query("select * from characters WHERE name LIKE '%' || :name || '%'")
-    fun searchCharacters(name: String): List<CharacterDBEntity>
+    @Query("select * from characters WHERE name LIKE '%' || :name || '%' and status LIKE '%' || :status || '%' and gender LIKE '%' || :gender || '%'and species LIKE '%' || :species || '%'and type LIKE '%' || :type || '%'")
+    fun searchCharacters(
+        name: String,
+        status: String,
+        gender: String,
+        species: String,
+        type: String
+    ): List<CharacterDBEntity>
 
     @Query("delete from characters")
     fun deleteCharacters()

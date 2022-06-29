@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.rickandmortyaston.R
 import com.example.rickandmortyaston.domain.characters.*
+import com.example.rickandmortyaston.domain.characters.use_cases.GetCharactersUseCase
+import com.example.rickandmortyaston.domain.characters.use_cases.GetDBCharactersUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -14,7 +16,6 @@ import javax.inject.Inject
 class CharactersViewModel @Inject constructor(
     private val context: Context,
     private val getCharactersUseCase: GetCharactersUseCase,
-    private val searchCharactersUseCase: SearchCharactersUseCase,
     private val getDBCharactersUseCase: GetDBCharactersUseCase
 ) : ViewModel() {
     private val _characters = MutableLiveData<List<CharacterDomain>>()
@@ -32,48 +33,73 @@ class CharactersViewModel @Inject constructor(
         _characters.postValue(emptyList())
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                _characters.postValue(getCharactersUseCase.execute(true,_request))
+                _characters.postValue(getCharactersUseCase.execute(true,false,_request))
 
             } catch (e: Exception) {
                 errorMessage.postValue(e.message)
-                _characters.postValue(getDBCharactersUseCase.execute())
+                _characters.postValue(getDBCharactersUseCase.execute(_request))
             }
         }
     }
 
-    fun searchData(query: String) {
+    fun searchData() {
         viewModelScope.launch(Dispatchers.IO) {
-            val response = searchCharactersUseCase.execute(query)
+            try{
+            val response = getCharactersUseCase.execute(false,false, _request)
             _characters.postValue(response)
             if (response.isEmpty()) {
-                errorMessage.postValue(context.getString(R.string.nothingToShow))
-            }
+                errorMessage.postValue(context.getString(R.string.nothingToShow))}
+            }catch(e: Exception){errorMessage.postValue(e.message)
+                _characters.postValue(getDBCharactersUseCase.execute(_request))}
         }
     }
-
-    fun changeStatus(value: Int) {
-        if(value==-1){_request.status = null}
-        else{_request.status = Status.values()[value]}
-        request.postValue(_request)
-        println("viewmodel"+_request.status)
-    }
-    fun changeGender(value: Int) {
-        if(value==-1){_request.gender = null}
-        else{_request.gender = Gender.values()[value]}
-        request.postValue(_request)
-    }
-    fun changeSpecies(value:Int){
-        if(value==-1){_request.species=null}
-        else{_request.species=Species.values()[value]}
-    }
-
     fun nextPage() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                _characters.postValue(getCharactersUseCase.execute(false,_request))
+                _characters.postValue(getCharactersUseCase.execute(false,true, _request))
             } catch (e: Exception) {
                 errorMessage.postValue(e.message)
             }
         }
+    }
+
+    fun changeName(value: String) {
+        _request.name=value
+        searchData()
+    }
+
+    fun changeStatus(value: Int) {
+        if (value == -1) {
+            _request.status = ""
+        } else {
+            _request.status = Status.values()[value].name
+        }
+        searchData()
+    }
+
+    fun changeGender(value: Int) {
+        if (value == -1) {
+            _request.gender = ""
+        } else {
+            _request.gender = Gender.values()[value].name
+        }
+        searchData()
+    }
+
+    fun changeSpecies(value: Int) {
+        if (value == -1) {
+            _request.species = ""
+        } else {
+            _request.species = Species.values()[value].name
+        }
+        searchData()
+    }
+    fun changeType(value: Int) {
+        if (value == -1) {
+            _request.type = ""
+        } else {
+            _request.type = Type.values()[value].name
+        }
+        searchData()
     }
 }

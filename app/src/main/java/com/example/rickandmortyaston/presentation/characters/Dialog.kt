@@ -19,19 +19,19 @@ class Dialog : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return activity?.let {
-            val selectedItems = ArrayList<Int>() // Where we track the selected items
+            val charactersFragment: CharactersFragment? =
+                requireActivity().supportFragmentManager.findFragmentByTag("CharactersFragment") as CharactersFragment?
             val builder = AlertDialog.Builder(it)
             builder.setTitle("Filters")
                 .setSingleChoiceItems(
                     list, checkedItem
                 ) { dialog, item ->
-                    val charactersFragment: CharactersFragment? =
-                        requireActivity().supportFragmentManager.findFragmentByTag("CharactersFragment") as CharactersFragment?
                     charactersFragment?.input(item)
                 }
                 .setPositiveButton("Ok"){id,dialog->
                 }
-                .setNegativeButton("Cancel") { dialog, id ->
+                .setNegativeButton("Clear") { dialog, id ->
+                    charactersFragment?.input(-1)
                 }
 
             builder.create()

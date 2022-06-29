@@ -14,9 +14,9 @@ interface NetworkService {
     suspend fun getPageData(
         @Query("page") page:Int?,
         @Query("name") name:String?,
-        @Query("status") status: Status?,
-        @Query("gender") gender:Gender?,
-       @Query("species") species: Species?,
+        @Query("status") status: String?,
+        @Query("gender") gender:String?,
+       @Query("species") species: String?,
         @Query("type") type:String?
     ): Response
 

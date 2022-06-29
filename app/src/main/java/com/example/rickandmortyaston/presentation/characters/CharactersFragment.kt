@@ -13,7 +13,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.rickandmortyaston.R
 import com.example.rickandmortyaston.databinding.CharactersFragmentBinding
 import com.example.rickandmortyaston.di.CharactersComponentProvider
-import com.example.rickandmortyaston.domain.characters.Status
+import com.example.rickandmortyaston.domain.characters.*
 import com.google.android.material.appbar.MaterialToolbar
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -23,7 +23,6 @@ import javax.inject.Inject
 class CharactersFragment : Fragment() {
     @Inject
     lateinit var viewModel: CharactersViewModel
-    private lateinit var filter:ImageView
     private lateinit var binding: CharactersFragmentBinding
     private lateinit var recyclerView: RecyclerView
     private lateinit var searchView: SearchView
@@ -74,11 +73,7 @@ class CharactersFragment : Fragment() {
         recyclerView.adapter = adapter
         setContent()
         swipe.setOnRefreshListener {
-            if (searchView.query.isEmpty()) {
                 viewModel.refreshData()
-            } else {
-                viewModel.searchData(searchView.query.toString())
-            }
             swipe.isRefreshing = false
         }
         var queryTextChangedJob: Job? = null
@@ -87,17 +82,15 @@ class CharactersFragment : Fragment() {
                 queryTextChangedJob?.cancel()
                 queryTextChangedJob = lifecycleScope.launch {
                     delay(1000)
-                    viewModel.searchData(text)
+                    viewModel.changeName(text)
                 }
                 return false
             }
-
             override fun onQueryTextSubmit(query: String): Boolean {
-                viewModel.searchData(query)
+                viewModel.changeName(query)
                 return false
             }
         })
-       // filter.setOnClickListener{filtration()}
     }
 
     private fun setContent() {
@@ -125,68 +118,68 @@ class CharactersFragment : Fragment() {
         progressBar.visibility = View.VISIBLE
         viewModel.nextPage()
     }
-    private fun filtration (item:Int){
-        var types = arrayListOf(
-            "Genetic experiment",
-            "Superhuman (Ghost trains summoner)",
-            "Parasite",
-            "Human with antennae",
-            "Human with ants in his eyes",
-            "Fish-Person",
-            "Cromulon",
-            "Self-aware arm",
-            "Cat-Person",
-            "Human with baby legs",
-            "Bepisian",
-            "Hivemind",
-            "Mytholog",
-            "Human with giant head",
-            "Dog",
-            "Bird-Person",
-            "Korblock",
-            "Boobloosian",
-            "Elephant-Person",
-            "Superhuman",
-            "Gromflomite",
-            "Centaur",
-            "Organic gun",
-            "Microverse inhabitant",
-            "Vampire",
-            "Light bulb-Alien",
-            "Animal",
-            "Robot-Crocodile hybrid",
-            "Zigerion",
-            "Giant",
-            "Cone-nippled alien",
-            "Demon",
-            "Shapeshifter",
-            "Game"
-        )
+    private fun makeListStatus():Bundle{
         val args=Bundle()
-        if (item==3){
-            args.putStringArrayList("list", types)
-            args.putInt("selected",2)
-        }else if(item==0){
-            val list= mutableListOf<String>()
-                Status.values().forEach { list.add(it.name) }
-            args.putStringArray("list",list.toTypedArray())
-
-            args.putInt("selected",viewModel._request.status?.ordinal?:-1)
-            println(args.getStringArray("list")?.size)
+        val list= mutableListOf<String>()
+        Status.values().forEach { list.add(it.name) }
+        args.putStringArray("list",list.toTypedArray())
+        var selected=-1
+        try{selected=Status.valueOf(viewModel._request.status).ordinal}
+        catch (e:Exception){println("status is empty")}
+        args.putInt("selected",selected)
+        return args
+    }
+    private fun makeListGender():Bundle{
+        val args=Bundle()
+        val list= mutableListOf<String>()
+        Gender.values().forEach { list.add(it.name) }
+        args.putStringArray("list",list.toTypedArray())
+        var selected=-1
+        try{selected=Gender.valueOf(viewModel._request.gender).ordinal}
+        catch (e:Exception){println("gender is empty")}
+        args.putInt("selected",selected)
+        return args
+    }
+    private fun makeListSpecies():Bundle{
+        val args=Bundle()
+        val list= mutableListOf<String>()
+        Species.values().forEach { list.add(it.name) }
+        args.putStringArray("list",list.toTypedArray())
+        var selected=-1
+        try{selected=Species.valueOf(viewModel._request.species).ordinal}
+        catch (e:Exception){println("species is empty")}
+        args.putInt("selected",selected)
+        return args
+    }
+    private fun makeListType():Bundle{
+        val args=Bundle()
+        val list= mutableListOf<String>()
+        Type.values().forEach { list.add(it.name) }
+        args.putStringArray("list",list.toTypedArray())
+        var selected=-1
+        try{selected=Type.valueOf(viewModel._request.type).ordinal}
+        catch (e:Exception){println("type is empty")}
+        args.putInt("selected",selected)
+        return args
+    }
+    private fun filtration (item:Int){
+        dialog=Dialog()
+       when(item){
+           0->dialog.arguments=makeListStatus()
+           1->dialog.arguments=makeListGender()
+           2->dialog.arguments=makeListSpecies()
+           3->dialog.arguments=makeListType()
         }
         filterId=item
-        dialog=Dialog()
-       dialog.arguments=args
-        println(args.getStringArray("list"))
-
        dialog.show(childFragmentManager,"Dialog")
 
     }
     fun input(value:Int){
         when(filterId){
-            0-> viewModel.changeStatus(value)
+            0->viewModel.changeStatus(value)
             1->viewModel.changeGender(value)
             2->viewModel.changeSpecies(value)
+            3->viewModel.changeType(value)
         }
     }
 
