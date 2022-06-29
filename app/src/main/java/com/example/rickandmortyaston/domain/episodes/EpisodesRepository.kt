@@ -4,8 +4,7 @@ import com.example.rickandmortyaston.domain.characters.CharacterDomain
 import com.example.rickandmortyaston.domain.characters.Request
 
 interface EpisodesRepository {
-    suspend fun getCharacters(refresh:Boolean,nextPage:Boolean,request: Request):List<CharacterDomain>
-    suspend fun getDBCharacters(request: Request):List<CharacterDomain>
-    suspend fun getCharacter(id:Int): CharacterDomain
-    suspend fun refreshCharacters(request: Request):List<CharacterDomain>
+    suspend fun getEpisodes(refresh:Boolean,nextPage:Boolean,request: RequestEpisodes):List<EpisodeDomain>
+    suspend fun getDBEpisodes(request: RequestEpisodes):List<EpisodeDomain>
+    suspend fun getEpisode(id:Int): EpisodeDomain
     }
