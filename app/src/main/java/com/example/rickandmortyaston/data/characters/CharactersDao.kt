@@ -1,4 +1,4 @@
-package com.example.characters.data.database
+package com.example.rickandmortyaston.data.characters
 
 import androidx.room.Dao
 import androidx.room.Insert

@@ -1,8 +1,6 @@
 package com.example.rickandmortyaston.data.characters
 
 import android.content.Context
-import com.example.characters.data.database.asDomainModel
-import com.example.characters.data.database.asListDomainModel
 import com.example.characters.data.database.getDatabase
 import com.example.characters.data.network.RetrofitClient
 import com.example.characters.data.network.asModel

@@ -1,6 +1,7 @@
 package com.example.characters.data.network
 
-import com.example.characters.data.database.CharacterDBEntity
+
+import com.example.rickandmortyaston.data.characters.CharacterDBEntity
 import com.squareup.moshi.Json
 
 data class CharacterDto constructor(
