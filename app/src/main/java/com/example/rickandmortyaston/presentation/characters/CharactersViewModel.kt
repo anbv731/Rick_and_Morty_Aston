@@ -21,8 +21,7 @@ class CharactersViewModel @Inject constructor(
     private val _characters = MutableLiveData<List<CharacterDomain>>()
     val characters: LiveData<List<CharacterDomain>> get() = _characters
     val errorMessage = MutableLiveData<String>()
-    val request = MutableLiveData<Request>()
-    var _request = Request()
+    var request = Request()
 
 
     init {
@@ -33,11 +32,11 @@ class CharactersViewModel @Inject constructor(
         _characters.postValue(emptyList())
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                _characters.postValue(getCharactersUseCase.execute(true,false,_request))
+                _characters.postValue(getCharactersUseCase.execute(true,false,request))
 
             } catch (e: Exception) {
                 errorMessage.postValue(e.message)
-                _characters.postValue(getDBCharactersUseCase.execute(_request))
+                _characters.postValue(getDBCharactersUseCase.execute(request))
             }
         }
     }
@@ -45,18 +44,18 @@ class CharactersViewModel @Inject constructor(
     fun searchData() {
         viewModelScope.launch(Dispatchers.IO) {
             try{
-            val response = getCharactersUseCase.execute(false,false, _request)
+            val response = getCharactersUseCase.execute(false,false, request)
             _characters.postValue(response)
             if (response.isEmpty()) {
                 errorMessage.postValue(context.getString(R.string.nothingToShow))}
             }catch(e: Exception){errorMessage.postValue(e.message)
-                _characters.postValue(getDBCharactersUseCase.execute(_request))}
+                _characters.postValue(getDBCharactersUseCase.execute(request))}
         }
     }
     fun nextPage() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                _characters.postValue(getCharactersUseCase.execute(false,true, _request))
+                _characters.postValue(getCharactersUseCase.execute(false,true, request))
             } catch (e: Exception) {
                 errorMessage.postValue(e.message)
             }
@@ -64,41 +63,41 @@ class CharactersViewModel @Inject constructor(
     }
 
     fun changeName(value: String) {
-        _request.name=value
+        request.name=value
         searchData()
     }
 
     fun changeStatus(value: Int) {
         if (value == -1) {
-            _request.status = ""
+            request.status = ""
         } else {
-            _request.status = Status.values()[value].name
+            request.status = Status.values()[value].name
         }
         searchData()
     }
 
     fun changeGender(value: Int) {
         if (value == -1) {
-            _request.gender = ""
+            request.gender = ""
         } else {
-            _request.gender = Gender.values()[value].name
+            request.gender = Gender.values()[value].name
         }
         searchData()
     }
 
     fun changeSpecies(value: Int) {
         if (value == -1) {
-            _request.species = ""
+            request.species = ""
         } else {
-            _request.species = Species.values()[value].name
+            request.species = Species.values()[value].name
         }
         searchData()
     }
     fun changeType(value: Int) {
         if (value == -1) {
-            _request.type = ""
+            request.type = ""
         } else {
-            _request.type = Type.values()[value].name
+            request.type = Type.values()[value].name
         }
         searchData()
     }

@@ -17,4 +17,7 @@
     <string name="theEnd">Конец списка</string>
     <string name="filters">Filters</string>
     <string name="type">Type</string>
+    <string name="episodes">Episodes List</string>
+    <string name="episode">Episode</string>
+    <string name="airDate">Air date</string>
 </resources>

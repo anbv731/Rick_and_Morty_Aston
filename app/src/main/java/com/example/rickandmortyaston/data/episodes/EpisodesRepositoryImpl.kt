@@ -38,7 +38,6 @@ class EpisodesRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getEpisode(id: Int): EpisodeDomain {
-        println("call getCharacter maxpage $maxPage")
         return database.episodesDao.getIdEpisode(id).asDomainModel()
     }
 

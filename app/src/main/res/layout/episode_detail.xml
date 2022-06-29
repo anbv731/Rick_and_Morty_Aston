@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/light_gray">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBarLayoutDetail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/topAppBarDetail"
+                style="@style/Widget.MaterialComponents.Toolbar.Primary"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:navigationIcon="?attr/homeAsUpIndicator" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/low_margin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/appBarLayoutDetail"
+            app:cardCornerRadius="@dimen/cardview_radius"
+            app:cardElevation="@dimen/cardview_default_elevation"
+            app:cardUseCompatPadding="true">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+                <TextView
+                    android:id="@+id/textViewDetailName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/mid_margin"
+                    android:layout_marginTop="@dimen/mic_margin"
+                    android:text="@string/name"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/textViewDetailNameData"
+                    android:layout_width="@dimen/zero"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/mic_margin"
+                    android:layout_marginTop="@dimen/mic_margin"
+                    android:layout_marginEnd="@dimen/mid_margin"
+                    app:layout_constraintStart_toEndOf="@+id/textViewDetailName"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/textViewDetailEpisode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/mid_margin"
+                    android:layout_marginTop="@dimen/mic_margin"
+                    android:text="@string/episode"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewDetailNameData" />
+
+                <TextView
+                    android:id="@+id/textViewDetailEpisodeData"
+                    android:layout_width="@dimen/zero"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/mic_margin"
+                    android:layout_marginTop="@dimen/mic_margin"
+                    android:layout_marginEnd="@dimen/mid_margin"
+                    app:layout_constraintStart_toEndOf="@+id/textViewDetailEpisode"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewDetailNameData" />
+
+                <TextView
+                    android:id="@+id/textViewDetailAirDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/mid_margin"
+                    android:layout_marginTop="@dimen/mic_margin"
+                    android:text="@string/airDate"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewDetailEpisodeData" />
+
+                <TextView
+                    android:id="@+id/textViewDetailAirDateData"
+                    android:layout_width="@dimen/zero"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/mic_margin"
+                    android:layout_marginTop="@dimen/mic_margin"
+                    android:layout_marginBottom="@dimen/mic_margin"
+                    android:layout_marginEnd="@dimen/mid_margin"
+                    app:layout_constraintStart_toEndOf="@+id/textViewDetailAirDate"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewDetailEpisodeData" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

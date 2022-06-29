@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.rickandmortyaston.presentation.characters.CharactersFragment
 import com.example.rickandmortyaston.R
+import com.example.rickandmortyaston.presentation.episodes.EpisodesFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
@@ -22,7 +23,9 @@ setupNavigation()
         navView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.characters -> {
-                    Toast.makeText(this, "Characters selected", Toast.LENGTH_SHORT).show()
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragmentPlace, CharactersFragment(), "CharactersFragment")
+                        .commit()
                     true
                 }
                 R.id.locations -> {
@@ -30,7 +33,9 @@ setupNavigation()
                     true
                 }
                 R.id.episodes -> {
-                    Toast.makeText(this, "episodes selected", Toast.LENGTH_SHORT).show()
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragmentPlace, EpisodesFragment(), "EpisodesFragment")
+                        .commit()
                     true
                 }
                 else -> true

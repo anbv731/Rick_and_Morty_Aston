@@ -15,7 +15,7 @@ interface NetworkService {
        @Query("species") species: String?,
         @Query("type") type:String?
     ): ResponseCharacters
-    @GET("episodes")
+    @GET("episode")
     suspend fun getEpisodesData(
         @Query("page") page:Int?,
         @Query("name") name:String?,

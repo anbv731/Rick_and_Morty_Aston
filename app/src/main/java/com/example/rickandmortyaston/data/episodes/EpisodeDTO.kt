@@ -3,27 +3,28 @@ package com.example.rickandmortyaston.data.episodes
 import com.squareup.moshi.Json
 
 data class EpisodeDto constructor(
-    @Json(name = "name")
+    @field:Json(name = "name")
     val name: String,
-    @Json(name = "id")
+    @field:Json(name = "id")
     val id: Int,
-    @Json(name = "air_date")
-    val airDate:String,
-    @Json(name = "episode")
+    @field:Json(name = "air_date")
+    val airdate: String?,
+    @field:Json(name = "episode")
     val episode: String,
-    @Json(name = "characters")
-    val characters:String
+    @field:Json(name = "characters")
+    val characters:List<String>
 
     )
 
 fun List<EpisodeDto>.asModel(): List<EpisodeDBEntity> {
+
     return map {
         EpisodeDBEntity(
             name = it.name,
             id = it.id,
-            airDate = it.airDate,
+            airDate = it.airdate?:"",
             episode = it.episode,
-            characters = it.characters
+            characters = it.characters.first()
         )
     }
 }

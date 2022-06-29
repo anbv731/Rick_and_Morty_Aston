@@ -1,9 +1,12 @@
-package com.example.rickandmortyaston.presentation.characters
+package com.example.rickandmortyaston.presentation.episodes
 
 import android.content.Context
 import android.os.Bundle
-import android.view.*
-import android.widget.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -12,31 +15,40 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.rickandmortyaston.R
 import com.example.rickandmortyaston.databinding.CharactersFragmentBinding
+import com.example.rickandmortyaston.databinding.EpisodesFragmentBinding
 import com.example.rickandmortyaston.di.CharactersComponentProvider
-import com.example.rickandmortyaston.domain.characters.*
+import com.example.rickandmortyaston.di.EpisodesComponentProvider
+import com.example.rickandmortyaston.domain.characters.Gender
+import com.example.rickandmortyaston.domain.characters.Species
+import com.example.rickandmortyaston.domain.characters.Status
+import com.example.rickandmortyaston.domain.characters.Type
+import com.example.rickandmortyaston.presentation.characters.CharacterDetailFragment
+import com.example.rickandmortyaston.presentation.characters.CharactersViewModel
+import com.example.rickandmortyaston.presentation.characters.Dialog
+import com.example.rickandmortyaston.presentation.characters.RecyclerAdapter
 import com.google.android.material.appbar.MaterialToolbar
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class CharactersFragment : Fragment() {
+class EpisodesFragment : Fragment() {
     @Inject
-    lateinit var viewModel: CharactersViewModel
-    private lateinit var binding: CharactersFragmentBinding
+    lateinit var viewModel: EpisodesViewModel
+    private lateinit var binding: EpisodesFragmentBinding
     private lateinit var recyclerView: RecyclerView
     private lateinit var searchView: SearchView
     private lateinit var progressBar: ProgressBar
-    private lateinit var adapter: RecyclerAdapter
+    private lateinit var adapter: RecyclerAdapterEpisodes
     private lateinit var swipe: SwipeRefreshLayout
-    private lateinit var dialog:DialogFragment
+    private lateinit var dialog: DialogFragment
     private lateinit var toolbar: MaterialToolbar
     private var filterId=0
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        (requireActivity().application as CharactersComponentProvider).provideCharactersComponent()
-            .injectCharactersFragment(this)
+        (requireActivity().application as EpisodesComponentProvider).provideEpisodesComponent()
+            .injectEpisodesFragment(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,12 +61,12 @@ class CharactersFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = CharactersFragmentBinding.inflate(inflater, container, false)
+        binding = EpisodesFragmentBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        recyclerView = binding.recyclerCharacters
+        recyclerView = binding.recycler
         searchView = binding.searchViewId
         progressBar = binding.progressBar
-        swipe = binding.swipeCharacters
+        swipe = binding.swipe
         toolbar=binding.AppBarId
         toolbar.setOnMenuItemClickListener {  when(it.itemId) {
             R.id.action_status -> filtration(0)
@@ -69,11 +81,11 @@ class CharactersFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = RecyclerAdapter(requireContext(), { id -> toItem(id) }, { nextPage() })
+        adapter = RecyclerAdapterEpisodes(requireContext(), { id -> toItem(id) }, { nextPage() })
         recyclerView.adapter = adapter
         setContent()
         swipe.setOnRefreshListener {
-                viewModel.refreshData()
+            viewModel.refreshData()
             swipe.isRefreshing = false
         }
         var queryTextChangedJob: Job? = null
@@ -94,20 +106,20 @@ class CharactersFragment : Fragment() {
     }
 
     private fun setContent() {
-            viewModel.characters.observe(viewLifecycleOwner) {
-                adapter.setList(it)
-                progressBar.visibility = View.INVISIBLE
-            }
-            viewModel.errorMessage.observe(viewLifecycleOwner) {
-                progressBar.visibility = View.INVISIBLE
-                Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
-            }
+        viewModel.episodes.observe(viewLifecycleOwner) {
+            adapter.setList(it)
+            progressBar.visibility = View.INVISIBLE
         }
+        viewModel.errorMessage.observe(viewLifecycleOwner) {
+            progressBar.visibility = View.INVISIBLE
+            Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
+        }
+    }
 
     private fun toItem(id: Int) {
         val arg = Bundle()
         arg.putInt("id", id)
-        val fragment = CharacterDetailFragment()
+        val fragment = EpisodeDetailFragment()
         fragment.arguments = arg
         activity?.supportFragmentManager?.beginTransaction()
             ?.replace(R.id.fragmentPlace, fragment, null)
@@ -118,68 +130,30 @@ class CharactersFragment : Fragment() {
         progressBar.visibility = View.VISIBLE
         viewModel.nextPage()
     }
-    private fun makeListStatus():Bundle{
-        val args=Bundle()
+    private fun makeListEpisode(): Bundle {
+        val args= Bundle()
         val list= mutableListOf<String>()
         Status.values().forEach { list.add(it.name) }
         args.putStringArray("list",list.toTypedArray())
         var selected=-1
-        try{selected=Status.valueOf(viewModel.request.status).ordinal}
+        try{selected= Status.valueOf(viewModel.request.episode).ordinal}
         catch (e:Exception){println("status is empty")}
         args.putInt("selected",selected)
         return args
     }
-    private fun makeListGender():Bundle{
-        val args=Bundle()
-        val list= mutableListOf<String>()
-        Gender.values().forEach { list.add(it.name) }
-        args.putStringArray("list",list.toTypedArray())
-        var selected=-1
-        try{selected=Gender.valueOf(viewModel.request.gender).ordinal}
-        catch (e:Exception){println("gender is empty")}
-        args.putInt("selected",selected)
-        return args
-    }
-    private fun makeListSpecies():Bundle{
-        val args=Bundle()
-        val list= mutableListOf<String>()
-        Species.values().forEach { list.add(it.name) }
-        args.putStringArray("list",list.toTypedArray())
-        var selected=-1
-        try{selected=Species.valueOf(viewModel.request.species).ordinal}
-        catch (e:Exception){println("species is empty")}
-        args.putInt("selected",selected)
-        return args
-    }
-    private fun makeListType():Bundle{
-        val args=Bundle()
-        val list= mutableListOf<String>()
-        Type.values().forEach { list.add(it.name) }
-        args.putStringArray("list",list.toTypedArray())
-        var selected=-1
-        try{selected=Type.valueOf(viewModel.request.type).ordinal}
-        catch (e:Exception){println("type is empty")}
-        args.putInt("selected",selected)
-        return args
-    }
+
     private fun filtration (item:Int){
-        dialog=Dialog()
-       when(item){
-           0->dialog.arguments=makeListStatus()
-           1->dialog.arguments=makeListGender()
-           2->dialog.arguments=makeListSpecies()
-           3->dialog.arguments=makeListType()
+        dialog= Dialog()
+        when(item){
+            0->dialog.arguments=makeListEpisode()
         }
         filterId=item
-       dialog.show(childFragmentManager,"Dialog")
+        dialog.show(childFragmentManager,"Dialog")
 
     }
     fun input(value:Int){
         when(filterId){
-            0->viewModel.changeStatus(value)
-            1->viewModel.changeGender(value)
-            2->viewModel.changeSpecies(value)
-            3->viewModel.changeType(value)
+            0->viewModel.changeEpisode(value)
         }
     }
 
