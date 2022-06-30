@@ -3,9 +3,11 @@ package com.example.rickandmortyaston.presentation
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentContainerView
 import com.example.rickandmortyaston.presentation.characters.CharactersFragment
 import com.example.rickandmortyaston.R
 import com.example.rickandmortyaston.presentation.episodes.EpisodesFragment
+import com.example.rickandmortyaston.presentation.locations.LocationsFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
@@ -29,7 +31,9 @@ setupNavigation()
                     true
                 }
                 R.id.locations -> {
-                    Toast.makeText(this, "locations selected", Toast.LENGTH_SHORT).show()
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragmentPlace, LocationsFragment(), "LocationsFragment")
+                        .commit()
                     true
                 }
                 R.id.episodes -> {

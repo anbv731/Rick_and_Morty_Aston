@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/filters"
+        android:title="@string/filters"
+        android:orderInCategory="101"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_baseline_filter_alt_24">
+
+        <menu>
+
+            <item android:id="@+id/action_type"
+                app:showAsAction="ifRoom"
+                android:title="@string/type" />
+            <item android:id="@+id/action_dimension"
+                app:showAsAction="ifRoom"
+                android:title="@string/dimension" />
+
+        </menu>
+
+    </item>
+</menu>

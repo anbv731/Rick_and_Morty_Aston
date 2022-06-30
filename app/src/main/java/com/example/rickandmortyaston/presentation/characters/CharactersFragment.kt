@@ -12,9 +12,10 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.rickandmortyaston.R
 import com.example.rickandmortyaston.databinding.CharactersFragmentBinding
-import com.example.rickandmortyaston.di.CharactersComponentProvider
+import com.example.rickandmortyaston.di.RaMComponentProvider
 import com.example.rickandmortyaston.domain.characters.*
 import com.google.android.material.appbar.MaterialToolbar
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -35,10 +36,15 @@ class CharactersFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        (requireActivity().application as CharactersComponentProvider).provideCharactersComponent()
+        (requireActivity().application as RaMComponentProvider).provideRaMComponent()
             .injectCharactersFragment(this)
+
     }
 
+    override fun onResume() {
+        super.onResume()
+        requireActivity().nav_view.visibility=View.VISIBLE
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)

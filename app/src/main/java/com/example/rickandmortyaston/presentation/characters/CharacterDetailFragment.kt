@@ -14,10 +14,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.rickandmortyaston.R
 import com.example.rickandmortyaston.databinding.CharacterDetailsBinding
-import com.example.rickandmortyaston.di.CharactersComponentProvider
+import com.example.rickandmortyaston.di.RaMComponentProvider
 import com.example.rickandmortyaston.domain.characters.CharacterDomain
 import com.example.rickandmortyaston.presentation.episodes.EpisodeDetailFragment
 import com.google.android.material.appbar.MaterialToolbar
+import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 class CharacterDetailFragment : Fragment() {
@@ -40,7 +41,7 @@ class CharacterDetailFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        (requireActivity().application as CharactersComponentProvider).provideCharactersComponent()
+        (requireActivity().application as RaMComponentProvider).provideRaMComponent()
             .injectCharactersDetailFragment(this)
     }
 
@@ -48,6 +49,7 @@ class CharacterDetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        requireActivity().nav_view.visibility=View.GONE
 
         binding = CharacterDetailsBinding.inflate(inflater, container, false)
         val root: View = binding.root
