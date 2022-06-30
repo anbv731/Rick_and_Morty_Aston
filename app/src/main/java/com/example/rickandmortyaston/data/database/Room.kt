@@ -10,12 +10,15 @@ import com.example.rickandmortyaston.data.characters.CharactersDao
 import com.example.rickandmortyaston.data.database.MyTypeConverter
 import com.example.rickandmortyaston.data.episodes.EpisodeDBEntity
 import com.example.rickandmortyaston.data.episodes.EpisodesDao
+import com.example.rickandmortyaston.data.locations.LocationDBEntity
+import com.example.rickandmortyaston.data.locations.LocationDao
 
-@Database(entities = [CharacterDBEntity::class,EpisodeDBEntity::class], version = 1)
+@Database(entities = [CharacterDBEntity::class,EpisodeDBEntity::class,LocationDBEntity::class], version = 1)
 @TypeConverters (MyTypeConverter::class)
 abstract class CharactersDataBase : RoomDatabase() {
     abstract val charactersDao: CharactersDao
     abstract val episodesDao:EpisodesDao
+    abstract  val locationDao:LocationDao
 }
 
 private lateinit var INSTANCE: CharactersDataBase
