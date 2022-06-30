@@ -3,6 +3,8 @@ package com.example.rickandmortyaston.di
 import android.content.Context
 import com.example.rickandmortyaston.presentation.characters.CharacterDetailFragment
 import com.example.rickandmortyaston.presentation.characters.CharactersFragment
+import com.example.rickandmortyaston.presentation.episodes.EpisodeDetailFragment
+import com.example.rickandmortyaston.presentation.episodes.EpisodesFragment
 import dagger.BindsInstance
 import dagger.Subcomponent
 
@@ -17,5 +19,7 @@ interface CharactersComponent {
 
     fun injectCharactersFragment(target: CharactersFragment)
     fun injectCharactersDetailFragment(target: CharacterDetailFragment)
+    fun injectEpisodesFragment(target: EpisodesFragment)
+    fun injectEpisodeDetailFragment(target: EpisodeDetailFragment)
 
 }

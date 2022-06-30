@@ -18,7 +18,7 @@ data class EpisodeDBEntity(
     @ColumnInfo(name = "episode")
     val episode: String,
     @ColumnInfo(name = "characters")
-    val characters: String
+    val characters: List<String>
 )
 
 fun List<EpisodeDBEntity>.asListDomainModel(): List<EpisodeDomain> {

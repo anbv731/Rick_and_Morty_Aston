@@ -36,3 +36,16 @@ fun List<CharacterDto>.asModel(): List<CharacterDBEntity> {
         )
     }
 }
+fun CharacterDto.asModelOne(): CharacterDBEntity {
+    return   CharacterDBEntity(
+        name = this.name,
+        id = this.id,
+        status = this.status,
+        species = this.species,
+        created = this.created,
+        image = this.image,
+        gender = this.gender,
+        type = this.type
+    )
+
+}

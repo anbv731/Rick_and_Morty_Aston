@@ -2,7 +2,6 @@ package com.example.rickandmortyaston
 
 
 import com.example.rickandmortyaston.di.CharactersComponent
-import com.example.rickandmortyaston.di.EpisodesComponent
 import dagger.Component
 import javax.inject.Singleton
 
@@ -11,5 +10,5 @@ import javax.inject.Singleton
 interface ApplicationComponent {
 
     fun charactersComponent(): CharactersComponent.Factory
-    fun episodesComponent():EpisodesComponent.Factory
+//    fun episodesComponent():EpisodesComponent.Factory
 }

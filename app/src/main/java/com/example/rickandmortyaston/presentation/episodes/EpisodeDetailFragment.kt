@@ -5,19 +5,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.bumptech.glide.Glide
-import com.example.rickandmortyaston.databinding.CharacterDetailsBinding
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.rickandmortyaston.R
 import com.example.rickandmortyaston.databinding.EpisodeDetailBinding
 import com.example.rickandmortyaston.di.CharactersComponentProvider
-import com.example.rickandmortyaston.di.EpisodesComponentProvider
-import com.example.rickandmortyaston.domain.characters.CharacterDomain
 import com.example.rickandmortyaston.domain.episodes.EpisodeDomain
-import com.example.rickandmortyaston.presentation.characters.CharacterDetailViewModel
+import com.example.rickandmortyaston.presentation.characters.CharacterDetailFragment
 import com.google.android.material.appbar.MaterialToolbar
-import kotlinx.android.synthetic.main.episode_detail.*
 import javax.inject.Inject
 
 class EpisodeDetailFragment : Fragment() {
@@ -32,11 +31,15 @@ class EpisodeDetailFragment : Fragment() {
     private lateinit var textViewEpisode: TextView
     private lateinit var textViewAirDate: TextView
     private lateinit var appBar: MaterialToolbar
+    private lateinit var recycler: RecyclerView
+    private  lateinit var progressBar:ProgressBar
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        (requireActivity().application as EpisodesComponentProvider).provideEpisodesComponent()
-            .injectEpisodesDetailFragment(this)
+//        (requireActivity().application as EpisodesComponentProvider).provideEpisodesComponent()
+//            .injectEpisodesDetailFragment(this)
+        (requireActivity().application as CharactersComponentProvider).provideCharactersComponent()
+            .injectEpisodeDetailFragment(this)
     }
 
 
@@ -50,7 +53,9 @@ class EpisodeDetailFragment : Fragment() {
         textViewAirDate = binding.textViewDetailAirDateData
         textViewEpisode = binding.textViewDetailEpisodeData
         textViewName = binding.textViewDetailNameData
+        recycler = binding.recyclerId
         appBar = binding.topAppBarDetail
+        progressBar=binding.progressBar
         appBar.setNavigationOnClickListener {
             requireActivity().onBackPressed()
         }
@@ -59,12 +64,27 @@ class EpisodeDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val adapter = RecyclerAdapterEpisodesDetail(requireContext()) { id -> toItem(id) }
+        recycler.layoutManager=LinearLayoutManager(requireContext())
+        recycler.adapter=adapter
         val requestId: Int? = arguments?.getInt(ARGUMENT)
         if (requestId != null) {
             viewModel.getData(requestId)
             viewModel.episode.observe(
                 viewLifecycleOwner
-            ) { containView(it) }
+            ) {
+                containView(it)
+                viewModel.getCharacters(it)
+            }
+            viewModel.characters.observe(
+                viewLifecycleOwner
+            ) {adapter.setList(it)
+                progressBar.visibility=View.INVISIBLE
+            }
+            viewModel.errorMessage.observe(viewLifecycleOwner) {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
+                progressBar.visibility=View.INVISIBLE
+            }
         }
     }
 
@@ -73,5 +93,16 @@ class EpisodeDetailFragment : Fragment() {
         appBar.title = episode.name
         textViewEpisode.text = episode.episode
         textViewAirDate.text = episode.airDate
+    }
+
+    private fun toItem(id: Int) {
+        val arg = Bundle()
+        arg.putInt("id", id)
+        val fragment = CharacterDetailFragment()
+        fragment.arguments = arg
+        activity?.supportFragmentManager?.beginTransaction()
+            ?.replace(R.id.fragmentPlace, fragment, null)
+            ?.addToBackStack(null)
+            ?.commit()
     }
 }

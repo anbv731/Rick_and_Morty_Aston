@@ -12,9 +12,9 @@ data class EpisodeDto constructor(
     @field:Json(name = "episode")
     val episode: String,
     @field:Json(name = "characters")
-    val characters:List<String>
+    val characters: List<String>
 
-    )
+)
 
 fun List<EpisodeDto>.asModel(): List<EpisodeDBEntity> {
 
@@ -22,9 +22,14 @@ fun List<EpisodeDto>.asModel(): List<EpisodeDBEntity> {
         EpisodeDBEntity(
             name = it.name,
             id = it.id,
-            airDate = it.airdate?:"",
+            airDate = it.airdate ?: "",
             episode = it.episode,
-            characters = it.characters.first()
+            characters = it.characters.map {
+                it.replace(
+                    "https://rickandmortyapi.com/api/character/",
+                    ""
+                )
+            }.toList()
         )
     }
 }

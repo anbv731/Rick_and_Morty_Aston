@@ -5,5 +5,5 @@ data class EpisodeDomain(
     val name: String,
     val airDate:String,
     val episode: String,
-    val characters:String
+    val characters:List<String>
 )

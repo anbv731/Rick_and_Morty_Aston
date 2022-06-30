@@ -17,7 +17,6 @@ import com.example.rickandmortyaston.R
 import com.example.rickandmortyaston.databinding.CharactersFragmentBinding
 import com.example.rickandmortyaston.databinding.EpisodesFragmentBinding
 import com.example.rickandmortyaston.di.CharactersComponentProvider
-import com.example.rickandmortyaston.di.EpisodesComponentProvider
 import com.example.rickandmortyaston.domain.characters.Gender
 import com.example.rickandmortyaston.domain.characters.Species
 import com.example.rickandmortyaston.domain.characters.Status
@@ -47,7 +46,9 @@ class EpisodesFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        (requireActivity().application as EpisodesComponentProvider).provideEpisodesComponent()
+//        (requireActivity().application as EpisodesComponentProvider).provideEpisodesComponent()
+//            .injectEpisodesFragment(this)
+        (requireActivity().application as CharactersComponentProvider).provideCharactersComponent()
             .injectEpisodesFragment(this)
     }
 
