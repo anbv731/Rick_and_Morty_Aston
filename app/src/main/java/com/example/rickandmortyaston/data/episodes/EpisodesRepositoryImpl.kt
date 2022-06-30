@@ -4,8 +4,6 @@ import android.content.Context
 import com.example.characters.data.database.getDatabase
 import com.example.characters.data.network.RetrofitClient
 import com.example.rickandmortyaston.R
-import com.example.rickandmortyaston.data.characters.asDomainModel
-import com.example.rickandmortyaston.data.characters.asModelOne
 import com.example.rickandmortyaston.domain.episodes.EpisodeDomain
 import com.example.rickandmortyaston.domain.episodes.EpisodesRepository
 import com.example.rickandmortyaston.domain.episodes.RequestEpisodes
