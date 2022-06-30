@@ -10,6 +10,6 @@ data class CharacterDomain(
     val type: String,
   //  val location:String,
    // val origin: String,
-  //  val episode:List<String>,
+    val episode:List<String>,
     val image: String
 )

@@ -2,6 +2,7 @@ package com.example.characters.data.network
 
 import com.example.rickandmortyaston.data.characters.CharacterDto
 import com.example.rickandmortyaston.data.characters.ResponseCharacters
+import com.example.rickandmortyaston.data.episodes.EpisodeDto
 import com.example.rickandmortyaston.data.episodes.ResponseEpisodes
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -27,4 +28,8 @@ interface NetworkService {
         @Query("name") name:String?,
         @Query("episode") episode: String?
     ): ResponseEpisodes
+    @GET("episode/{id}")
+    suspend fun getSingleEpisode(
+        @Path("id")id:String
+    ) :EpisodeDto
 }

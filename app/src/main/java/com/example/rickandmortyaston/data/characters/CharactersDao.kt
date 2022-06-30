@@ -15,6 +15,7 @@ interface CharactersDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(characters: List<CharacterDBEntity>)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertOne(character: CharacterDBEntity)
 

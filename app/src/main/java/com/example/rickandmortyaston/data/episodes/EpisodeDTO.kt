@@ -33,3 +33,19 @@ fun List<EpisodeDto>.asModel(): List<EpisodeDBEntity> {
         )
     }
 }
+
+fun EpisodeDto.asModelOne(): EpisodeDBEntity {
+    return EpisodeDBEntity(
+        name = this.name,
+        id = this.id,
+        airDate = this.airdate ?: "",
+        episode = this.episode,
+        characters = this.characters.map {
+            it.replace(
+                "https://rickandmortyapi.com/api/character/",
+                ""
+            )
+        }.toList()
+    )
+}
+

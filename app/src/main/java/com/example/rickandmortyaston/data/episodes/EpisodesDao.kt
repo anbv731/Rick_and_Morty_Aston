@@ -14,6 +14,9 @@ interface EpisodesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(episodes: List<EpisodeDBEntity>)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertOne(episodes: EpisodeDBEntity)
+
     @Query("select * from episodes WHERE name LIKE '%' || :name || '%' and episode LIKE '%' || :episode || '%'")
     fun searchEpisodes(
         name: String,

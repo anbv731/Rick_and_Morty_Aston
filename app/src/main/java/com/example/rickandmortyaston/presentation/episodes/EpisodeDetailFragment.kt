@@ -36,8 +36,6 @@ class EpisodeDetailFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-//        (requireActivity().application as EpisodesComponentProvider).provideEpisodesComponent()
-//            .injectEpisodesDetailFragment(this)
         (requireActivity().application as CharactersComponentProvider).provideCharactersComponent()
             .injectEpisodeDetailFragment(this)
     }
@@ -65,7 +63,6 @@ class EpisodeDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val adapter = RecyclerAdapterEpisodesDetail(requireContext()) { id -> toItem(id) }
-        recycler.layoutManager=LinearLayoutManager(requireContext())
         recycler.adapter=adapter
         val requestId: Int? = arguments?.getInt(ARGUMENT)
         if (requestId != null) {

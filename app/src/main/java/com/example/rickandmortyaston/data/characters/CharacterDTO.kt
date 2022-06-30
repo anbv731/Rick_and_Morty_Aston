@@ -3,23 +3,24 @@ package com.example.rickandmortyaston.data.characters
 import com.squareup.moshi.Json
 
 data class CharacterDto constructor(
-    @Json(name = "name")
+    @field:Json(name = "name")
     val name: String,
-    @Json(name = "id")
+    @field:Json(name = "id")
     val id: Int,
-    @Json(name = "status")
+    @field:Json(name = "status")
     val status: String,
-    @Json(name = "species")
+    @field:Json(name = "species")
     val species: String,
-    @Json(name = "gender")
+    @field:Json(name = "gender")
     val gender: String,
-    @Json(name = "created")
+    @field:Json(name = "created")
     val created: String,
-    @Json(name = "type")
+    @field:Json(name = "type")
     val type: String,
-    @Json(name = "image")
+    @field:Json(name = "image")
     val image: String,
-
+    @field:Json(name="episode")
+    val episode: List<String>
     )
 
 fun List<CharacterDto>.asModel(): List<CharacterDBEntity> {
@@ -32,7 +33,13 @@ fun List<CharacterDto>.asModel(): List<CharacterDBEntity> {
             created = it.created,
             image = it.image,
             gender = it.gender,
-            type = it.type
+            type = it.type,
+            episode = it.episode.map {
+                it.replace(
+                    "https://rickandmortyapi.com/api/episode/",
+                    ""
+                )
+            }.toList()
         )
     }
 }
@@ -45,7 +52,13 @@ fun CharacterDto.asModelOne(): CharacterDBEntity {
         created = this.created,
         image = this.image,
         gender = this.gender,
-        type = this.type
+        type = this.type,
+        episode = this.episode.map {
+            it.replace(
+                "https://rickandmortyapi.com/api/episode/",
+                ""
+            )
+        }.toList()
     )
 
 }

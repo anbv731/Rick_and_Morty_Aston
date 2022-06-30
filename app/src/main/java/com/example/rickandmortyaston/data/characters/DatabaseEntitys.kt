@@ -25,6 +25,8 @@ data class CharacterDBEntity(
     val type: String,
     @ColumnInfo(name = "image")
     val image: String,
+    @ColumnInfo(name = "episode")
+    val episode: List<String>,
 )
 
 fun List<CharacterDBEntity>.asListDomainModel(): List<CharacterDomain> {
@@ -37,7 +39,8 @@ fun List<CharacterDBEntity>.asListDomainModel(): List<CharacterDomain> {
             created = it.created,
             image = it.image,
             gender = it.gender,
-            type = it.type
+            type = it.type,
+            episode = it.episode
 
         )
     }
@@ -52,6 +55,7 @@ fun CharacterDBEntity.asDomainModel(): CharacterDomain {
         created = this.created,
         image = this.image,
         gender = this.gender,
-        type = this.type
+        type = this.type,
+        episode = this.episode
     )
 }

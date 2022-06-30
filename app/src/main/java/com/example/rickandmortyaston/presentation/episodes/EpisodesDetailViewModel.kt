@@ -8,13 +8,14 @@ import com.example.rickandmortyaston.domain.characters.CharacterDomain
 import com.example.rickandmortyaston.domain.characters.use_cases.GetCharacterUseCase
 import com.example.rickandmortyaston.domain.characters.use_cases.GetDBCharacterUseCase
 import com.example.rickandmortyaston.domain.episodes.EpisodeDomain
+import com.example.rickandmortyaston.domain.episodes.GetDBEpisodeUseCase
 import com.example.rickandmortyaston.domain.episodes.GetEpisodeUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class EpisodesDetailViewModel @Inject constructor(
-    private val getEpisodeUseCase: GetEpisodeUseCase,
+    private val getDBEpisodeUseCase: GetDBEpisodeUseCase,
     private val getDBCharacterUseCase: GetDBCharacterUseCase,
     private val getCharacterUseCase: GetCharacterUseCase
 ) : ViewModel() {
@@ -28,7 +29,7 @@ class EpisodesDetailViewModel @Inject constructor(
     fun getData(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                _episode.postValue(getEpisodeUseCase.execute(id))
+                _episode.postValue(getDBEpisodeUseCase.execute(id))
             } catch (e: Exception) {
                 errorMessage.postValue(e.toString())
             }
