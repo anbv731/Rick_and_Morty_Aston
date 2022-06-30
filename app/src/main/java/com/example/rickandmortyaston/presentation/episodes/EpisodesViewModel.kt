@@ -69,11 +69,15 @@ class EpisodesViewModel @Inject constructor(
     }
 
     fun changeEpisode(value: Int) {
+        println("change season to $value")
         if (value == -1) {
             request.episode = ""
         } else {
-           // _request.episode =
+           request.episode = "S0${value+1}"
         }
         searchData()
+    }
+    fun getSeason():Int{
+        return request.episode.substring(2,3).toInt()
     }
 }

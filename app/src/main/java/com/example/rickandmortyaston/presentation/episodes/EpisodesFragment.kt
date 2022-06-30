@@ -14,17 +14,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.rickandmortyaston.R
-import com.example.rickandmortyaston.databinding.CharactersFragmentBinding
 import com.example.rickandmortyaston.databinding.EpisodesFragmentBinding
 import com.example.rickandmortyaston.di.CharactersComponentProvider
-import com.example.rickandmortyaston.domain.characters.Gender
-import com.example.rickandmortyaston.domain.characters.Species
-import com.example.rickandmortyaston.domain.characters.Status
-import com.example.rickandmortyaston.domain.characters.Type
-import com.example.rickandmortyaston.presentation.characters.CharacterDetailFragment
-import com.example.rickandmortyaston.presentation.characters.CharactersViewModel
 import com.example.rickandmortyaston.presentation.characters.Dialog
-import com.example.rickandmortyaston.presentation.characters.RecyclerAdapter
 import com.google.android.material.appbar.MaterialToolbar
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -42,12 +34,9 @@ class EpisodesFragment : Fragment() {
     private lateinit var swipe: SwipeRefreshLayout
     private lateinit var dialog: DialogFragment
     private lateinit var toolbar: MaterialToolbar
-    private var filterId=0
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-//        (requireActivity().application as EpisodesComponentProvider).provideEpisodesComponent()
-//            .injectEpisodesFragment(this)
         (requireActivity().application as CharactersComponentProvider).provideCharactersComponent()
             .injectEpisodesFragment(this)
     }
@@ -68,15 +57,13 @@ class EpisodesFragment : Fragment() {
         searchView = binding.searchViewId
         progressBar = binding.progressBar
         swipe = binding.swipe
-        toolbar=binding.AppBarId
-        toolbar.setOnMenuItemClickListener {  when(it.itemId) {
-            R.id.action_status -> filtration(0)
-            R.id.action_gender->filtration(1)
-            R.id.action_species->filtration(2)
-            R.id.action_type->filtration(3)
-
+        toolbar = binding.AppBarId
+        toolbar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.action_season -> filtration()
+            }
+            true
         }
-            true }
         return root
     }
 
@@ -99,6 +86,7 @@ class EpisodesFragment : Fragment() {
                 }
                 return false
             }
+
             override fun onQueryTextSubmit(query: String): Boolean {
                 viewModel.changeName(query)
                 return false
@@ -127,35 +115,35 @@ class EpisodesFragment : Fragment() {
             ?.addToBackStack(null)
             ?.commit()
     }
-    private fun nextPage(){
+
+    private fun nextPage() {
         progressBar.visibility = View.VISIBLE
         viewModel.nextPage()
     }
-    private fun makeListEpisode(): Bundle {
-        val args= Bundle()
-        val list= mutableListOf<String>()
-        Status.values().forEach { list.add(it.name) }
-        args.putStringArray("list",list.toTypedArray())
-        var selected=-1
-        try{selected= Status.valueOf(viewModel.request.episode).ordinal}
-        catch (e:Exception){println("status is empty")}
-        args.putInt("selected",selected)
+
+    private fun makeListSeasons(): Bundle {
+        val args = Bundle()
+        val list = mutableListOf<String>()
+        for (i in 1..5) {
+            list.add("Season $i")
+        }
+        args.putStringArray("list", list.toTypedArray())
+        var selected = -1
+        try {
+            selected = viewModel.getSeason()
+        } catch (e: Exception) {
+        }
+        args.putInt("selected", selected)
         return args
     }
 
-    private fun filtration (item:Int){
-        dialog= Dialog()
-        when(item){
-            0->dialog.arguments=makeListEpisode()
-        }
-        filterId=item
-        dialog.show(childFragmentManager,"Dialog")
-
-    }
-    fun input(value:Int){
-        when(filterId){
-            0->viewModel.changeEpisode(value)
-        }
+    private fun filtration() {
+        dialog = DialogEpisodes()
+        dialog.arguments = makeListSeasons()
+        dialog.show(childFragmentManager, "Dialog")
     }
 
+    fun input(value: Int) {
+        viewModel.changeEpisode(value)
+    }
 }

@@ -1,6 +1,6 @@
 package com.example.rickandmortyaston.domain.characters
 
-class Request(
+class RequestCharacters(
     var name: String = "",
     var status: String = "",
     var gender: String = "",

@@ -20,4 +20,5 @@
     <string name="episodes">Episodes List</string>
     <string name="episode">Episode</string>
     <string name="airDate">Air date</string>
+    <string name="season">Season</string>
 </resources>

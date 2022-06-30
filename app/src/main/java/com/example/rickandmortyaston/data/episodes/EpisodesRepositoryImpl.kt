@@ -22,6 +22,7 @@ class EpisodesRepositoryImpl @Inject constructor(
             page = 1
             val result = RetrofitClient().getApi().getEpisodesData(page, request.name,request.episode)
             maxPage = result.info.pages.toInt()
+            println(maxPage)
             val episodes = result.results
             if(refresh)database.episodesDao.deleteEpisodes()
             database.episodesDao.insertAll(episodes.asModel())

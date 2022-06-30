@@ -21,7 +21,7 @@ class CharactersViewModel @Inject constructor(
     private val _characters = MutableLiveData<List<CharacterDomain>>()
     val characters: LiveData<List<CharacterDomain>> get() = _characters
     val errorMessage = MutableLiveData<String>()
-    var request = Request()
+    var request = RequestCharacters()
 
 
     init {
