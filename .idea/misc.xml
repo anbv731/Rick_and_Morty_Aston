@@ -3,7 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/tatiana/StudioProjects/RickandMortyAston/app/src/main/res/drawable/ic_ram.xml" value="0.1775" />
+        <entry key="..\:/Users/tatiana/StudioProjects/RickandMortyAston/app/src/main/res/drawable/ic_rectangle_6.xml" value="0.1775" />
         <entry key="..\:/Users/tatiana/StudioProjects/RickandMortyAston/app/src/main/res/layout/activity_main.xml" value="0.264" />
+        <entry key="..\:/Users/tatiana/StudioProjects/RickandMortyAston/app/src/main/res/layout/activity_splash_screen.xml" value="0.2957427536231884" />
         <entry key="..\:/Users/tatiana/StudioProjects/RickandMortyAston/app/src/main/res/layout/character_details.xml" value="0.2957427536231884" />
         <entry key="..\:/Users/tatiana/StudioProjects/RickandMortyAston/app/src/main/res/layout/characters_fragment.xml" value="0.2957427536231884" />
         <entry key="..\:/Users/tatiana/StudioProjects/RickandMortyAston/app/src/main/res/layout/dialog_layout.xml" value="0.2957427536231884" />
