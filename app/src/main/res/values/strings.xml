@@ -6,6 +6,8 @@
     <string name="name">Name</string>
     <string name="species">Species</string>
     <string name="created">Created</string>
+    <string name="origin">Origin</string>
+    <string name="location">location</string>
     <string name="something">Something</string>
     <string name="characters">Character List</string>
     <string name="search">Search</string>

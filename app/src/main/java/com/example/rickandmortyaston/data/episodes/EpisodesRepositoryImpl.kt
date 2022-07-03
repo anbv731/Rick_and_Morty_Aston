@@ -4,6 +4,10 @@ import android.content.Context
 import com.example.characters.data.database.getDatabase
 import com.example.characters.data.network.RetrofitClient
 import com.example.rickandmortyaston.R
+import com.example.rickandmortyaston.data.characters.asDomainModel
+import com.example.rickandmortyaston.data.characters.asListDomainModel
+import com.example.rickandmortyaston.data.characters.asModel
+import com.example.rickandmortyaston.data.characters.asModelOne
 import com.example.rickandmortyaston.domain.episodes.EpisodeDomain
 import com.example.rickandmortyaston.domain.episodes.EpisodesRepository
 import com.example.rickandmortyaston.domain.episodes.RequestEpisodes
@@ -38,11 +42,20 @@ class EpisodesRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getEpisode(id: Int): EpisodeDomain {
-        val result = RetrofitClient().getApi().getSingleEpisode(id.toString())
-        database.episodesDao.insertOne(result.asModelOne())
-        return result.asModelOne().asDomainModel()
+    override suspend fun getEpisode(id: List<Int>): List<EpisodeDomain> {
+        if (id.size == 1) {
+            val result = RetrofitClient().getApi().getSingleEpisode(id[0].toString())
+            database.episodesDao.insertOne(result.asModelOne())
+            return listOf(result.asModelOne().asDomainModel())
+        } else {
+            val result = RetrofitClient().getApi().getEpisodesbyId(id.toString())
+            database.episodesDao.insertAll(result.asModel())
+            return result.asModel().asListDomainModel()
+        }
+
+
     }
+
 
     override suspend fun getDBEpisode(id: Int): EpisodeDomain {
         return database.episodesDao.getIdEpisode(id).asDomainModel()

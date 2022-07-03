@@ -73,7 +73,7 @@ class CharactersRepositoryImpl @Inject constructor(
 
     override suspend fun getCharacter(id: List<Int>): List<CharacterDomain> {
         if (id.size == 1) {
-            val result = RetrofitClient().getApi().getSingleCharacter(id.toString())
+            val result = RetrofitClient().getApi().getSingleCharacter(id[0].toString())
             database.charactersDao.insertOne(result.asModelOne())
             return listOf(result.asModelOne().asDomainModel())
         } else {

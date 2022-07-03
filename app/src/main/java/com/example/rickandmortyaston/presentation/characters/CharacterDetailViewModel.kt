@@ -40,10 +40,10 @@ class CharacterDetailViewModel @Inject constructor(
     fun getEpisodes(character: CharacterDomain) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                _episodes.postValue(character.episode.map { getEpisodeUseCase.execute(it.toInt()) }
-                    .toList())
+                _episodes.postValue( getEpisodeUseCase.execute(character.episode.map { it.toInt() }) )
+
             } catch (e: Exception) {
-                errorMessage.postValue("Check connection")
+                errorMessage.postValue(e.message)
                 try {
                     _episodes.postValue(character.episode.map { getDBEpisodeUseCase.execute(it.toInt()) }
                         .toList())

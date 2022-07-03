@@ -19,9 +19,13 @@ data class CharacterDto constructor(
     val type: String,
     @field:Json(name = "image")
     val image: String,
-    @field:Json(name="episode")
-    val episode: List<String>
-    )
+    @field:Json(name = "episode")
+    val episode: List<String>,
+    @field:Json(name = "origin")
+    val origin: Origin,
+    @field:Json(name = "location")
+    val location: Origin
+)
 
 fun List<CharacterDto>.asModel(): List<CharacterDBEntity> {
     return map {
@@ -39,12 +43,23 @@ fun List<CharacterDto>.asModel(): List<CharacterDBEntity> {
                     "https://rickandmortyapi.com/api/episode/",
                     ""
                 )
-            }.toList()
+            }.toList(),
+            origin = it.origin.url.replace(
+                "https://rickandmortyapi.com/api/location/",
+                ""
+            ),
+            originName = it.origin.name,
+            location = it.location.url.replace(
+                "https://rickandmortyapi.com/api/location/",
+                ""
+            ),
+            locationName = it.location.name
         )
     }
 }
+
 fun CharacterDto.asModelOne(): CharacterDBEntity {
-    return   CharacterDBEntity(
+    return CharacterDBEntity(
         name = this.name,
         id = this.id,
         status = this.status,
@@ -58,7 +73,17 @@ fun CharacterDto.asModelOne(): CharacterDBEntity {
                 "https://rickandmortyapi.com/api/episode/",
                 ""
             )
-        }.toList()
+        }.toList(),
+        origin = this.origin.url.replace(
+            "https://rickandmortyapi.com/api/location/",
+            ""
+        ),
+        originName = this.origin.name,
+        location = this.location.url.replace(
+            "https://rickandmortyapi.com/api/location/",
+            ""
+        ),
+        locationName = this.location.name
     )
 
 }

@@ -17,6 +17,7 @@ import com.example.rickandmortyaston.databinding.CharacterDetailsBinding
 import com.example.rickandmortyaston.di.RaMComponentProvider
 import com.example.rickandmortyaston.domain.characters.CharacterDomain
 import com.example.rickandmortyaston.presentation.episodes.EpisodeDetailFragment
+import com.example.rickandmortyaston.presentation.locations.LocationDetailFragment
 import com.google.android.material.appbar.MaterialToolbar
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
@@ -32,7 +33,8 @@ class CharacterDetailFragment : Fragment() {
     private lateinit var textViewName: TextView
     private lateinit var textViewStatus: TextView
     private lateinit var textViewGender: TextView
-    private lateinit var textViewCreated: TextView
+    private lateinit var textViewOrigin: TextView
+    private lateinit var textViewLocation: TextView
     private lateinit var textViewSpecies: TextView
     private lateinit var image: ImageView
     private lateinit var appBar: MaterialToolbar
@@ -53,7 +55,8 @@ class CharacterDetailFragment : Fragment() {
 
         binding = CharacterDetailsBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        textViewCreated = binding.textViewDetailCreatedData
+        textViewOrigin = binding.textViewDetailOriginData
+        textViewLocation = binding.textViewDetailLocationData
         textViewGender = binding.textViewDetailGenderData
         textViewName = binding.textViewDetailNameData
         textViewSpecies = binding.textViewDetailSpeciesData
@@ -100,10 +103,25 @@ class CharacterDetailFragment : Fragment() {
         textViewStatus.text = character.status
         textViewSpecies.text = character.species
         textViewGender.text = character.gender
-        textViewCreated.text = character.created.substring(0, 10)
+        textViewOrigin.text = character.originName
+        textViewOrigin.setOnClickListener { toLocation(character.origin) }
+        textViewLocation.setOnClickListener { toLocation(character.location) }
+        textViewLocation.text=character.locationName
         Glide.with(requireContext())
             .load(character.image)
             .into(image)
+    }
+    private fun toLocation(id: String) {
+        if(id.isNotEmpty()) {
+            val arg = Bundle()
+            arg.putInt("id", id.toInt())
+            val fragment = LocationDetailFragment()
+            fragment.arguments = arg
+            activity?.supportFragmentManager?.beginTransaction()
+                ?.replace(R.id.fragmentPlace, fragment, null)
+                ?.addToBackStack(null)
+                ?.commit()
+        }
     }
 
     private fun toItem(id: Int) {

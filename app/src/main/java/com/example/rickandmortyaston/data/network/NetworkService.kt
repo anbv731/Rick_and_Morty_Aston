@@ -41,6 +41,10 @@ interface NetworkService {
     suspend fun getSingleEpisode(
         @Path("id") id: String
     ): EpisodeDto
+    @GET("episode/{id}")
+    suspend fun getEpisodesbyId(
+        @Path("id") id: String
+    ): List<EpisodeDto>
 
     @GET("location")
     suspend fun getLocationsData(

@@ -10,6 +10,8 @@ import com.example.rickandmortyaston.domain.characters.use_cases.GetDBCharacterU
 import com.example.rickandmortyaston.domain.episodes.EpisodeDomain
 import com.example.rickandmortyaston.domain.episodes.GetDBEpisodeUseCase
 import com.example.rickandmortyaston.domain.locations.GetDBLocationUseCase
+import com.example.rickandmortyaston.domain.locations.GetDBLocationsUseCase
+import com.example.rickandmortyaston.domain.locations.GetLocationUseCase
 import com.example.rickandmortyaston.domain.locations.LocationDomain
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -17,6 +19,7 @@ import javax.inject.Inject
 
 class LocationDetailViewModel @Inject constructor(
     private val getDBLocationUseCase: GetDBLocationUseCase,
+    private val getLocationUseCase: GetLocationUseCase,
     private val getDBCharacterUseCase: GetDBCharacterUseCase,
     private val getCharacterUseCase: GetCharacterUseCase
 ) : ViewModel() {
@@ -32,7 +35,8 @@ class LocationDetailViewModel @Inject constructor(
             try {
                 _location.postValue(getDBLocationUseCase.execute(id))
             } catch (e: Exception) {
-                errorMessage.postValue(e.toString())
+                try{_location.postValue(getLocationUseCase.execute(id))}
+                catch (e:Exception){errorMessage.postValue("Check connection")}
             }
         }
     }

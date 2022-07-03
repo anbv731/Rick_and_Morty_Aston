@@ -32,38 +32,55 @@ class CharactersViewModel @Inject constructor(
         _characters.postValue(emptyList())
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                _characters.postValue(getCharactersUseCase.execute(true,false,request))
+                _characters.postValue(getCharactersUseCase.execute(true, false, request))
 
             } catch (e: Exception) {
-                errorMessage.postValue(e.message)
-                _characters.postValue(getDBCharactersUseCase.execute(request))
+                errorMessage.postValue("Check connection")
+                try {
+                    _characters.postValue(getDBCharactersUseCase.execute(request))
+                } catch (e: Exception) {
+                    errorMessage.postValue(e.message)
+                }
             }
         }
     }
 
     fun searchData() {
         viewModelScope.launch(Dispatchers.IO) {
-            try{
-            val response = getCharactersUseCase.execute(false,false, request)
-            _characters.postValue(response)
-            if (response.isEmpty()) {
-                errorMessage.postValue(context.getString(R.string.nothingToShow))}
-            }catch(e: Exception){errorMessage.postValue(e.message)
-                _characters.postValue(getDBCharactersUseCase.execute(request))}
+            try {
+                val response = getCharactersUseCase.execute(false, false, request)
+                _characters.postValue(response)
+                if (response.isEmpty()) {
+                    errorMessage.postValue(context.getString(R.string.nothingToShow))
+                }
+            } catch (e: Exception) {
+                errorMessage.postValue("Check connection")
+                try {
+                    _characters.postValue(getDBCharactersUseCase.execute(request))
+                } catch (e: Exception) {
+                    errorMessage.postValue(e.message)
+                }
+            }
         }
     }
+
     fun nextPage() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                _characters.postValue(getCharactersUseCase.execute(false,true, request))
+                _characters.postValue(getCharactersUseCase.execute(false, true, request))
             } catch (e: Exception) {
                 errorMessage.postValue(e.message)
+                try {
+                    _characters.postValue(getDBCharactersUseCase.execute(request))
+                } catch (e: Exception) {
+                    errorMessage.postValue(e.message)
+                }
             }
         }
     }
 
     fun changeName(value: String) {
-        request.name=value
+        request.name = value
         searchData()
     }
 
@@ -93,6 +110,7 @@ class CharactersViewModel @Inject constructor(
         }
         searchData()
     }
+
     fun changeType(value: Int) {
         if (value == -1) {
             request.type = ""
@@ -102,3 +120,4 @@ class CharactersViewModel @Inject constructor(
         searchData()
     }
 }
+

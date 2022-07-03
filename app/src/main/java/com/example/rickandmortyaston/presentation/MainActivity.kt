@@ -11,7 +11,9 @@ import com.example.rickandmortyaston.presentation.locations.LocationsFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.Theme_RickAndMortyAston)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         supportFragmentManager.beginTransaction()

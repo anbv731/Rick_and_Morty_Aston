@@ -8,8 +8,10 @@ data class CharacterDomain(
     val gender: String,
     val created: String,
     val type: String,
-  //  val location:String,
-   // val origin: String,
+   val location:String,
+    val locationName:String,
+   val origin: String,
+    val originName:String,
     val episode:List<String>,
     val image: String
 )
