@@ -68,13 +68,21 @@ class CharactersRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getDBCharacter(id: Int): CharacterDomain {
-            return database.charactersDao.getIdCharacters(id).asDomainModel()
+        return database.charactersDao.getIdCharacters(id).asDomainModel()
     }
 
-    override suspend fun getCharacter(id: Int): CharacterDomain {
-        val result = RetrofitClient().getApi().getSingleCharacter(id.toString())
-        database.charactersDao.insertOne(result.asModelOne())
-        return result.asModelOne().asDomainModel()
+    override suspend fun getCharacter(id: List<Int>): List<CharacterDomain> {
+        if (id.size == 1) {
+            val result = RetrofitClient().getApi().getSingleCharacter(id.toString())
+            database.charactersDao.insertOne(result.asModelOne())
+            return listOf(result.asModelOne().asDomainModel())
+        } else {
+            val result = RetrofitClient().getApi().getCharactersById(id.toString())
+            database.charactersDao.insertAll(result.asModel())
+            return result.asModel().asListDomainModel()
+        }
+
+
     }
 
     override suspend fun refreshCharacters(requestCharacters: RequestCharacters): List<CharacterDomain> {

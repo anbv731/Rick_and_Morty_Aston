@@ -16,6 +16,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.rickandmortyaston.R
 import com.example.rickandmortyaston.databinding.LocationsFragmentBinding
 import com.example.rickandmortyaston.di.RaMComponentProvider
+import com.example.rickandmortyaston.domain.locations.RequestLocation
 import com.google.android.material.appbar.MaterialToolbar
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Job
@@ -34,6 +35,8 @@ class LocationsFragment : Fragment() {
     private lateinit var swipe: SwipeRefreshLayout
     private lateinit var dialog: DialogFragment
     private lateinit var toolbar: MaterialToolbar
+    private var filterId=0
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -60,8 +63,8 @@ class LocationsFragment : Fragment() {
         toolbar = binding.AppBarId
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
-                R.id.action_type -> filtration()
-                R.id.action_dimension -> filtration()
+                R.id.action_type -> filtration(0)
+                R.id.action_dimension -> filtration(1)
             }
             true
         }
@@ -109,12 +112,12 @@ class LocationsFragment : Fragment() {
     private fun toItem(id: Int) {
         val arg = Bundle()
         arg.putInt("id", id)
-//        val fragment = EpisodeDetailFragment()
-//        fragment.arguments = arg
-//        activity?.supportFragmentManager?.beginTransaction()
-//            ?.replace(R.id.fragmentPlace, fragment, null)
-//            ?.addToBackStack(null)
-//            ?.commit()
+        val fragment = LocationDetailFragment()
+        fragment.arguments = arg
+        activity?.supportFragmentManager?.beginTransaction()
+            ?.replace(R.id.fragmentPlace, fragment, null)
+            ?.addToBackStack(null)
+            ?.commit()
     }
 
     private fun nextPage() {
@@ -122,29 +125,37 @@ class LocationsFragment : Fragment() {
         viewModel.nextPage()
     }
 
-    private fun makeListSeasons(): Bundle {
+    private fun makeTypeList(): Bundle {
         val args = Bundle()
-        val list = mutableListOf<String>()
-        for (i in 1..5) {
-            list.add("Season $i")
-        }
-        args.putStringArray("list", list.toTypedArray())
-        var selected = -1
-        try {
-
-        } catch (e: Exception) {
-        }
+        val list = RequestLocation.typeLocations
+        args.putStringArray("list", list)
+        val selected = list.indexOf(viewModel.request.type)
+        args.putInt("selected", selected)
+        return args
+    }
+    private fun makeDimensionsList(): Bundle {
+        val args = Bundle()
+        val list = RequestLocation.dimension
+        args.putStringArray("list", list)
+        val selected = list.indexOf(viewModel.request.dimension)
         args.putInt("selected", selected)
         return args
     }
 
-    private fun filtration() {
+    private fun filtration(item:Int) {
         dialog = DialogLocations()
-        dialog.arguments = makeListSeasons()
+        when(item){
+            0->dialog.arguments = makeTypeList()
+            1->dialog.arguments = makeDimensionsList()
+        }
+        filterId=item
         dialog.show(childFragmentManager, "Dialog")
     }
 
     fun input(value: Int) {
-        viewModel.changeType(value)
+        when(filterId) {
+            0 -> viewModel.changeType(value)
+            1 -> viewModel.changeDimension(value)
+        }
     }
 }

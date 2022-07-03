@@ -75,7 +75,7 @@ class LocationsViewModel @Inject constructor(
         if (value == -1) {
             request.type = ""
         } else {
-           request.type = "S0${value+1}"
+           request.type = RequestLocation.typeLocations[value]
         }
         searchData()
     }
@@ -83,7 +83,7 @@ class LocationsViewModel @Inject constructor(
         if (value == -1) {
             request.dimension = ""
         } else {
-            request.dimension = "S0${value+1}"
+            request.dimension = RequestLocation.dimension[value]
         }
         searchData()
     }

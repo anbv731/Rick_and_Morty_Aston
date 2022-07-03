@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Rick and Morty Aston</string>
+    <string name="app_name">Rick and Morty</string>
     <string name="check_connection">Check connection</string>
     <string name="status">Status</string>
     <string name="gender">Gender</string>

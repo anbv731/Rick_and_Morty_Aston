@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.WindowManager
 import com.example.rickandmortyaston.R
 
 class SplashScreen : AppCompatActivity() {

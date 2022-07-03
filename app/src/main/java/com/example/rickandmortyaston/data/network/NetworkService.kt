@@ -25,6 +25,10 @@ interface NetworkService {
     suspend fun getSingleCharacter(
         @Path("id") id: String
     ): CharacterDto
+    @GET("character/{id}")
+    suspend fun getCharactersById(
+        @Path("id") id: String
+    ): List<CharacterDto>
 
     @GET("episode")
     suspend fun getEpisodesData(
