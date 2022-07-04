@@ -11,10 +11,8 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rickandmortyaston.R
-import com.example.rickandmortyaston.databinding.EpisodeDetailBinding
 import com.example.rickandmortyaston.databinding.LocationsDetailBinding
 import com.example.rickandmortyaston.di.RaMComponentProvider
-import com.example.rickandmortyaston.domain.episodes.EpisodeDomain
 import com.example.rickandmortyaston.domain.locations.LocationDomain
 import com.example.rickandmortyaston.presentation.characters.CharacterDetailFragment
 import com.example.rickandmortyaston.presentation.episodes.RecyclerAdapterEpisodesDetail
@@ -35,7 +33,7 @@ class LocationDetailFragment : Fragment() {
     private lateinit var textViewDimension: TextView
     private lateinit var appBar: MaterialToolbar
     private lateinit var recycler: RecyclerView
-    private  lateinit var progressBar:ProgressBar
+    private lateinit var progressBar: ProgressBar
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -48,7 +46,7 @@ class LocationDetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        requireActivity().nav_view.visibility=View.GONE
+        requireActivity().nav_view.visibility = View.GONE
         binding = LocationsDetailBinding.inflate(inflater, container, false)
         val root: View = binding.root
         textViewType = binding.textViewDetailTypeData
@@ -56,7 +54,7 @@ class LocationDetailFragment : Fragment() {
         textViewName = binding.textViewDetailNameData
         recycler = binding.recyclerId
         appBar = binding.topAppBarDetail
-        progressBar=binding.progressBar
+        progressBar = binding.progressBar
         appBar.setNavigationOnClickListener {
             requireActivity().onBackPressed()
         }
@@ -66,7 +64,7 @@ class LocationDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val adapter = RecyclerAdapterEpisodesDetail(requireContext()) { id -> toItem(id) }
-        recycler.adapter=adapter
+        recycler.adapter = adapter
         val requestId: Int? = arguments?.getInt(ARGUMENT)
         if (requestId != null) {
             viewModel.getData(requestId)
@@ -78,17 +76,18 @@ class LocationDetailFragment : Fragment() {
             }
             viewModel.characters.observe(
                 viewLifecycleOwner
-            ) {adapter.setList(it)
-                progressBar.visibility=View.INVISIBLE
+            ) {
+                adapter.setList(it)
+                progressBar.visibility = View.INVISIBLE
             }
             viewModel.errorMessage.observe(viewLifecycleOwner) {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
-                progressBar.visibility=View.INVISIBLE
+                progressBar.visibility = View.INVISIBLE
             }
         }
     }
 
-    private fun containView(location:LocationDomain) {
+    private fun containView(location: LocationDomain) {
         textViewName.text = location.name
         appBar.title = location.name
         textViewType.text = location.type

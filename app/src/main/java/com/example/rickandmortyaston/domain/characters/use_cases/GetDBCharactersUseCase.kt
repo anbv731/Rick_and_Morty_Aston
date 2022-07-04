@@ -6,7 +6,7 @@ import com.example.rickandmortyaston.domain.characters.RequestCharacters
 import javax.inject.Inject
 
 class GetDBCharactersUseCase @Inject constructor(private val repository: CharactersRepository) {
-    suspend fun execute(requestCharacters: RequestCharacters):List<CharacterDomain> {
+    suspend fun execute(requestCharacters: RequestCharacters): List<CharacterDomain> {
         return repository.getDBCharacters(requestCharacters)
     }
 }

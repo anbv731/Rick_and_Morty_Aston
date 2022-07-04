@@ -19,6 +19,7 @@ enum class Gender {
 enum class Species {
     Human, Alien, Humanoid, unknown, Poopybutthole, Mythological_Creature, Animal, Robot, Cronenberg, Disease
 }
+
 enum class Type {
     Experiment,
     Superhuman,

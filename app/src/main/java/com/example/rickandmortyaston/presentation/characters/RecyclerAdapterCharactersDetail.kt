@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.rickandmortyaston.databinding.ItemEpisodesBinding
 import com.example.rickandmortyaston.domain.episodes.EpisodeDomain
 
-class RecyclerAdapterCharactersDetail (
+class RecyclerAdapterCharactersDetail(
     private val context: Context,
     private val toItem: (id: Int) -> Unit
 ) : RecyclerView.Adapter<RecyclerAdapterCharactersDetail.CharactersDetailViewHolder>() {

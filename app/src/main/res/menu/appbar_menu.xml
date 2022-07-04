@@ -10,16 +10,20 @@
 
         <menu>
 
-            <item android:id="@+id/action_status"
+            <item
+                android:id="@+id/action_status"
                 app:showAsAction="ifRoom"
                 android:title="@string/status" />
-            <item android:id="@+id/action_gender"
+            <item
+                android:id="@+id/action_gender"
                 app:showAsAction="ifRoom"
                 android:title="@string/gender" />
-            <item android:id="@+id/action_species"
+            <item
+                android:id="@+id/action_species"
                 app:showAsAction="ifRoom"
                 android:title="@string/species" />
-            <item android:id="@+id/action_type"
+            <item
+                android:id="@+id/action_type"
                 app:showAsAction="ifRoom"
                 android:title="@string/type" />
 

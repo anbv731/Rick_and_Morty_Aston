@@ -51,7 +51,7 @@ class CharacterDetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        requireActivity().nav_view.visibility=View.GONE
+        requireActivity().nav_view.visibility = View.GONE
 
         binding = CharacterDetailsBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -63,8 +63,8 @@ class CharacterDetailFragment : Fragment() {
         textViewStatus = binding.textViewDetailStatusData
         image = binding.imageViewCharacterDetail
         appBar = binding.topAppBarDetail
-        recycler=binding.recyclerId
-        progressBar=binding.progressBar
+        recycler = binding.recyclerId
+        progressBar = binding.progressBar
         appBar.setNavigationOnClickListener {
             requireActivity().onBackPressed()
         }
@@ -106,13 +106,14 @@ class CharacterDetailFragment : Fragment() {
         textViewOrigin.text = character.originName
         textViewOrigin.setOnClickListener { toLocation(character.origin) }
         textViewLocation.setOnClickListener { toLocation(character.location) }
-        textViewLocation.text=character.locationName
+        textViewLocation.text = character.locationName
         Glide.with(requireContext())
             .load(character.image)
             .into(image)
     }
+
     private fun toLocation(id: String) {
-        if(id.isNotEmpty()) {
+        if (id.isNotEmpty()) {
             val arg = Bundle()
             arg.putInt("id", id.toInt())
             val fragment = LocationDetailFragment()

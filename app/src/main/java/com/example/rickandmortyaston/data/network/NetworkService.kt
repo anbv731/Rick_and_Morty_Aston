@@ -25,6 +25,7 @@ interface NetworkService {
     suspend fun getSingleCharacter(
         @Path("id") id: String
     ): CharacterDto
+
     @GET("character/{id}")
     suspend fun getCharactersById(
         @Path("id") id: String
@@ -41,6 +42,7 @@ interface NetworkService {
     suspend fun getSingleEpisode(
         @Path("id") id: String
     ): EpisodeDto
+
     @GET("episode/{id}")
     suspend fun getEpisodesbyId(
         @Path("id") id: String

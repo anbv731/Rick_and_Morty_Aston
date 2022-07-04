@@ -32,7 +32,7 @@ class EpisodeDetailFragment : Fragment() {
     private lateinit var textViewAirDate: TextView
     private lateinit var appBar: MaterialToolbar
     private lateinit var recycler: RecyclerView
-    private  lateinit var progressBar:ProgressBar
+    private lateinit var progressBar: ProgressBar
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -45,7 +45,7 @@ class EpisodeDetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        requireActivity().nav_view.visibility=View.GONE
+        requireActivity().nav_view.visibility = View.GONE
         binding = EpisodeDetailBinding.inflate(inflater, container, false)
         val root: View = binding.root
         textViewAirDate = binding.textViewDetailAirDateData
@@ -53,7 +53,7 @@ class EpisodeDetailFragment : Fragment() {
         textViewName = binding.textViewDetailNameData
         recycler = binding.recyclerId
         appBar = binding.topAppBarDetail
-        progressBar=binding.progressBar
+        progressBar = binding.progressBar
         appBar.setNavigationOnClickListener {
             requireActivity().onBackPressed()
         }
@@ -63,7 +63,7 @@ class EpisodeDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val adapter = RecyclerAdapterEpisodesDetail(requireContext()) { id -> toItem(id) }
-        recycler.adapter=adapter
+        recycler.adapter = adapter
         val requestId: Int? = arguments?.getInt(ARGUMENT)
         if (requestId != null) {
             viewModel.getData(requestId)
@@ -75,12 +75,13 @@ class EpisodeDetailFragment : Fragment() {
             }
             viewModel.characters.observe(
                 viewLifecycleOwner
-            ) {adapter.setList(it)
-                progressBar.visibility=View.INVISIBLE
+            ) {
+                adapter.setList(it)
+                progressBar.visibility = View.INVISIBLE
             }
             viewModel.errorMessage.observe(viewLifecycleOwner) {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
-                progressBar.visibility=View.INVISIBLE
+                progressBar.visibility = View.INVISIBLE
             }
         }
     }

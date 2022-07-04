@@ -33,7 +33,7 @@ class EpisodesViewModel @Inject constructor(
         _episodes.postValue(emptyList())
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                _episodes.postValue(getEpisodesUseCase.execute(true,false,request))
+                _episodes.postValue(getEpisodesUseCase.execute(true, false, request))
 
             } catch (e: Exception) {
                 errorMessage.postValue(e.message)
@@ -44,27 +44,39 @@ class EpisodesViewModel @Inject constructor(
 
     fun searchData() {
         viewModelScope.launch(Dispatchers.IO) {
-            try{
-                val response = getEpisodesUseCase.execute(false,false, request)
+            try {
+                val response = getEpisodesUseCase.execute(false, false, request)
                 _episodes.postValue(response)
                 if (response.isEmpty()) {
-                    errorMessage.postValue(context.getString(R.string.nothingToShow))}
-            }catch(e: Exception){errorMessage.postValue(e.message)
-                _episodes.postValue(getDBEpisodesUseCase.execute(request))}
+                    errorMessage.postValue(context.getString(R.string.nothingToShow))
+                }
+            } catch (e: Exception) {
+                errorMessage.postValue(e.message)
+                _episodes.postValue(getDBEpisodesUseCase.execute(request))
+            }
         }
     }
+
     fun nextPage() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                _episodes.postValue(getEpisodesUseCase.execute(false,true, request))
+                _episodes.postValue(getEpisodesUseCase.execute(false, true, request))
             } catch (e: Exception) {
                 errorMessage.postValue(e.message)
+                if (e.message != "Конец списка") {
+                    try {
+                        _episodes.postValue(getDBEpisodesUseCase.execute(request))
+                    } catch (e: java.lang.Exception) {
+                        errorMessage.postValue(e.message)
+
+                    }
+                }
             }
         }
     }
 
     fun changeName(value: String) {
-        request.name=value
+        request.name = value
         searchData()
     }
 
@@ -73,11 +85,12 @@ class EpisodesViewModel @Inject constructor(
         if (value == -1) {
             request.episode = ""
         } else {
-           request.episode = "S0${value+1}"
+            request.episode = "S0${value + 1}"
         }
         searchData()
     }
-    fun getSeason():Int{
-        return request.episode.substring(2,3).toInt()
+
+    fun getSeason(): Int {
+        return request.episode.substring(2, 3).toInt()
     }
 }

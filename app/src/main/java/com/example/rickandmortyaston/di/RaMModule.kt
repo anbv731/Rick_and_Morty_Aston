@@ -13,9 +13,11 @@ import dagger.Module
 abstract class RaMModule {
     @Binds
     abstract fun getCharactersRepository(repository: CharactersRepositoryImpl): CharactersRepository
+
     @Binds
     abstract fun getEpisodesRepository(repository: EpisodesRepositoryImpl): EpisodesRepository
+
     @Binds
-    abstract fun getLocationsRepository(repository: LocationsRepositoryImpl):LocationRepository
+    abstract fun getLocationsRepository(repository: LocationsRepositoryImpl): LocationRepository
 
 }

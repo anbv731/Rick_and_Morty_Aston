@@ -6,10 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.rickandmortyaston.R
-import com.example.rickandmortyaston.domain.episodes.EpisodeDomain
-import com.example.rickandmortyaston.domain.episodes.GetDBEpisodesUseCase
-import com.example.rickandmortyaston.domain.episodes.GetEpisodesUseCase
-import com.example.rickandmortyaston.domain.episodes.RequestEpisodes
 import com.example.rickandmortyaston.domain.locations.GetDBLocationsUseCase
 import com.example.rickandmortyaston.domain.locations.GetLocationsUseCase
 import com.example.rickandmortyaston.domain.locations.LocationDomain
@@ -37,7 +33,7 @@ class LocationsViewModel @Inject constructor(
         _locations.postValue(emptyList())
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                _locations.postValue(getLocationsUseCase.execute(true,false,request))
+                _locations.postValue(getLocationsUseCase.execute(true, false, request))
 
             } catch (e: Exception) {
                 errorMessage.postValue(e.message)
@@ -48,37 +44,51 @@ class LocationsViewModel @Inject constructor(
 
     fun searchData() {
         viewModelScope.launch(Dispatchers.IO) {
-            try{
-                val response = getLocationsUseCase.execute(false,false, request)
+            try {
+                val response = getLocationsUseCase.execute(false, false, request)
                 _locations.postValue(response)
                 if (response.isEmpty()) {
-                    errorMessage.postValue(context.getString(R.string.nothingToShow))}
-            }catch(e: Exception){errorMessage.postValue(e.message)
-                _locations.postValue(getDBLocationsUseCase.execute(request))}
+                    errorMessage.postValue(context.getString(R.string.nothingToShow))
+                }
+            } catch (e: Exception) {
+                errorMessage.postValue(e.message)
+                _locations.postValue(getDBLocationsUseCase.execute(request))
+            }
         }
     }
+
     fun nextPage() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                _locations.postValue(getLocationsUseCase.execute(false,true, request))
+                _locations.postValue(getLocationsUseCase.execute(false, true, request))
             } catch (e: Exception) {
                 errorMessage.postValue(e.message)
+                if (e.message != "Конец списка") {
+                    try {
+                        _locations.postValue(getDBLocationsUseCase.execute(request))
+                    } catch (e: Exception) {
+                        errorMessage.postValue(e.message)
+                    }
+
+                }
             }
         }
     }
 
     fun changeName(value: String) {
-        request.name=value
+        request.name = value
         searchData()
     }
+
     fun changeType(value: Int) {
         if (value == -1) {
             request.type = ""
         } else {
-           request.type = RequestLocation.typeLocations[value]
+            request.type = RequestLocation.typeLocations[value]
         }
         searchData()
     }
+
     fun changeDimension(value: Int) {
         if (value == -1) {
             request.dimension = ""

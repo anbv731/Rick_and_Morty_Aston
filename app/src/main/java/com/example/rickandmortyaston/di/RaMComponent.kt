@@ -7,7 +7,6 @@ import com.example.rickandmortyaston.presentation.episodes.EpisodeDetailFragment
 import com.example.rickandmortyaston.presentation.episodes.EpisodesFragment
 import com.example.rickandmortyaston.presentation.locations.LocationDetailFragment
 import com.example.rickandmortyaston.presentation.locations.LocationsFragment
-import com.example.rickandmortyaston.presentation.locations.LocationsFragment_MembersInjector
 import dagger.BindsInstance
 import dagger.Component
 
@@ -24,8 +23,8 @@ interface RaMComponent {
     fun injectCharactersDetailFragment(target: CharacterDetailFragment)
     fun injectEpisodesFragment(target: EpisodesFragment)
     fun injectEpisodeDetailFragment(target: EpisodeDetailFragment)
-    fun injectLocationsFragment(target:LocationsFragment)
-    fun injectLocationDetailFragment(target:LocationDetailFragment)
+    fun injectLocationsFragment(target: LocationsFragment)
+    fun injectLocationDetailFragment(target: LocationDetailFragment)
 
 
 }

@@ -16,7 +16,6 @@ class CharactersRepositoryImpl @Inject constructor(
     private var page = 1
     private var maxPage = 1
 
-
     override suspend fun getCharacters(
         refresh: Boolean,
         nextPage: Boolean,
@@ -68,7 +67,7 @@ class CharactersRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getDBCharacter(id: Int): CharacterDomain {
-        return database.charactersDao.getIdCharacters(id).asDomainModel()
+        return database.charactersDao.getIdCharacters(id)?.asDomainModel()
     }
 
     override suspend fun getCharacter(id: List<Int>): List<CharacterDomain> {
@@ -83,28 +82,6 @@ class CharactersRepositoryImpl @Inject constructor(
         }
 
 
-    }
-
-    override suspend fun refreshCharacters(requestCharacters: RequestCharacters): List<CharacterDomain> {
-        page = 1
-        val result = RetrofitClient().getApi().getCharactersData(
-            page,
-            requestCharacters.name,
-            requestCharacters.status,
-            requestCharacters.gender,
-            requestCharacters.species,
-            requestCharacters.type
-        )
-        val characters = result.results
-        database.charactersDao.deleteCharacters()
-        database.charactersDao.insertAll(characters.asModel())
-        return database.charactersDao.searchCharacters(
-            requestCharacters.name,
-            requestCharacters.status,
-            requestCharacters.gender,
-            requestCharacters.species,
-            requestCharacters.type
-        ).asListDomainModel()
     }
 
     override suspend fun getDBCharacters(requestCharacters: RequestCharacters): List<CharacterDomain> {

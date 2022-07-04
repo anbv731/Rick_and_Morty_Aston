@@ -1,6 +1,5 @@
 package com.example.rickandmortyaston.data.characters
 
-import com.example.rickandmortyaston.data.characters.CharacterDto
 import com.example.rickandmortyaston.data.network.Info
 import com.squareup.moshi.Json
 

@@ -10,7 +10,8 @@
 
         <menu>
 
-            <item android:id="@+id/action_season"
+            <item
+                android:id="@+id/action_season"
                 app:showAsAction="ifRoom"
                 android:title="@string/season" />
 

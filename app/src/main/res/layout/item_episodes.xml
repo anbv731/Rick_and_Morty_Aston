@@ -25,7 +25,8 @@
                 android:layout_marginTop="@dimen/mic_margin"
                 android:textColor="@color/gray"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
+                app:layout_constraintStart_toStartOf="parent" />
+
             <TextView
                 android:id="@+id/episodeTextView"
                 android:layout_width="wrap_content"
@@ -34,8 +35,8 @@
                 android:layout_marginTop="@dimen/mic_margin"
                 android:textColor="@color/gray"
                 app:layout_constraintTop_toBottomOf="@id/nameTextView"
-                app:layout_constraintStart_toStartOf="parent"
-                />
+                app:layout_constraintStart_toStartOf="parent" />
+
             <TextView
                 android:id="@+id/airDateTextView"
                 android:layout_width="wrap_content"
@@ -44,7 +45,7 @@
                 android:layout_marginTop="@dimen/mic_margin"
                 android:textColor="@color/gray"
                 app:layout_constraintTop_toBottomOf="@id/episodeTextView"
-                app:layout_constraintStart_toStartOf="parent"/>
+                app:layout_constraintStart_toStartOf="parent" />
 
             <ImageView
                 android:id="@+id/arrowView"

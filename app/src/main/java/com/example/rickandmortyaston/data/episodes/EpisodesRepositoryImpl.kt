@@ -4,10 +4,6 @@ import android.content.Context
 import com.example.characters.data.database.getDatabase
 import com.example.characters.data.network.RetrofitClient
 import com.example.rickandmortyaston.R
-import com.example.rickandmortyaston.data.characters.asDomainModel
-import com.example.rickandmortyaston.data.characters.asListDomainModel
-import com.example.rickandmortyaston.data.characters.asModel
-import com.example.rickandmortyaston.data.characters.asModelOne
 import com.example.rickandmortyaston.domain.episodes.EpisodeDomain
 import com.example.rickandmortyaston.domain.episodes.EpisodesRepository
 import com.example.rickandmortyaston.domain.episodes.RequestEpisodes
@@ -21,22 +17,30 @@ class EpisodesRepositoryImpl @Inject constructor(
     private var maxPage = 1
 
 
-    override suspend fun getEpisodes(refresh:Boolean,nextPage: Boolean,request: RequestEpisodes): List<EpisodeDomain> {
+    override suspend fun getEpisodes(
+        refresh: Boolean,
+        nextPage: Boolean,
+        request: RequestEpisodes
+    ): List<EpisodeDomain> {
         if (!nextPage) {
             page = 1
-            val result = RetrofitClient().getApi().getEpisodesData(page, request.name,request.episode)
+            val result =
+                RetrofitClient().getApi().getEpisodesData(page, request.name, request.episode)
             maxPage = result.info.pages.toInt()
             println(maxPage)
             val episodes = result.results
-            if(refresh)database.episodesDao.deleteEpisodes()
+            if (refresh) database.episodesDao.deleteEpisodes()
             database.episodesDao.insertAll(episodes.asModel())
-            return database.episodesDao.searchEpisodes(request.name,request.episode).asListDomainModel()
+            return database.episodesDao.searchEpisodes(request.name, request.episode)
+                .asListDomainModel()
         } else if (page < maxPage) {
             page++
-            val result = RetrofitClient().getApi().getEpisodesData(page,request.name,request.episode)
+            val result =
+                RetrofitClient().getApi().getEpisodesData(page, request.name, request.episode)
             val episodes = result.results
             database.episodesDao.insertAll(episodes.asModel())
-            return database.episodesDao.searchEpisodes(request.name,request.episode).asListDomainModel()
+            return database.episodesDao.searchEpisodes(request.name, request.episode)
+                .asListDomainModel()
         } else {
             throw Exception(context.getString(R.string.theEnd))
         }
@@ -52,16 +56,15 @@ class EpisodesRepositoryImpl @Inject constructor(
             database.episodesDao.insertAll(result.asModel())
             return result.asModel().asListDomainModel()
         }
-
-
     }
 
-
     override suspend fun getDBEpisode(id: Int): EpisodeDomain {
-        return database.episodesDao.getIdEpisode(id).asDomainModel()
+        val result=database.episodesDao.getIdEpisode(id)
+        return database.episodesDao.getIdEpisode(id)?.asDomainModel()
     }
 
     override suspend fun getDBEpisodes(request: RequestEpisodes): List<EpisodeDomain> {
-        return database.episodesDao.searchEpisodes(request.name,request.episode).asListDomainModel()
+        return database.episodesDao.searchEpisodes(request.name, request.episode)
+            .asListDomainModel()
     }
 }

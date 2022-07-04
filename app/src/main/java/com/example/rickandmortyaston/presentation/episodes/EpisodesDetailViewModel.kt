@@ -44,7 +44,7 @@ class EpisodesDetailViewModel @Inject constructor(
                 errorMessage.postValue("Check connection")
                 try {
                     _characters.postValue(episode.characters.map { getDBCharacterUseCase.execute(it.toInt()) }
-                        .toList())
+                        .toList().filterNotNull())
                 } catch (e: Exception) {
                 }
             }

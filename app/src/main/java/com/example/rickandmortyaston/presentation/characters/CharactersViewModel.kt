@@ -70,10 +70,12 @@ class CharactersViewModel @Inject constructor(
                 _characters.postValue(getCharactersUseCase.execute(false, true, request))
             } catch (e: Exception) {
                 errorMessage.postValue(e.message)
-                try {
-                    _characters.postValue(getDBCharactersUseCase.execute(request))
-                } catch (e: Exception) {
-                    errorMessage.postValue(e.message)
+                if (e.message != "Конец списка") {
+                    try {
+                        _characters.postValue(getDBCharactersUseCase.execute(request))
+                    } catch (e: Exception) {
+                        errorMessage.postValue(e.message)
+                    }
                 }
             }
         }

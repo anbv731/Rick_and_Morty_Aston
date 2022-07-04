@@ -3,9 +3,7 @@ package com.example.rickandmortyaston.presentation.characters
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.example.rickandmortyaston.databinding.ItemBinding
 import com.example.rickandmortyaston.domain.characters.CharacterDomain
@@ -14,15 +12,15 @@ import com.example.rickandmortyaston.domain.characters.CharacterDomain
 class RecyclerAdapter(
     private val context: Context,
     private val toItem: (id: Int) -> Unit,
-    private val nextPage: () -> Unit
 ) :
     RecyclerView.Adapter<RecyclerAdapter.CharactersViewHolder>() {
     var characters = mutableListOf<CharacterDomain>()
-    private var isPageLoading=false
+
     fun setList(list: List<CharacterDomain>) {
         this.characters = list.toMutableList()
         notifyDataSetChanged()
-        isPageLoading=false
+
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharactersViewHolder {
@@ -35,9 +33,9 @@ class RecyclerAdapter(
         val character = characters[position]
 
         holder.textViewName.text = (character.name)
-        holder.textViewSpecies.text=character.species
-        holder.textViewStatus.text=character.status
-        holder.textViewGender.text=character.gender
+        holder.textViewSpecies.text = character.species
+        holder.textViewStatus.text = character.status
+        holder.textViewGender.text = character.gender
         Glide.with(context)
             .load(character.image)
             .circleCrop()
@@ -57,17 +55,16 @@ class RecyclerAdapter(
         val cardView = binding.CardViewId
         val textViewSpecies = binding.speciesTextView
         val textViewStatus = binding.statusTextView
-        val textViewGender=binding.genderTextView
+        val textViewGender = binding.genderTextView
     }
 
-    override fun onViewAttachedToWindow(holder: CharactersViewHolder) {
-        super.onViewAttachedToWindow(holder)
-        val layoutPosition = holder.layoutPosition
-        if(layoutPosition==characters.size-1 && !isPageLoading) {
-            println("isPageLoading "+isPageLoading)
-            isPageLoading=true
-            nextPage()
-        }
-    }
+//    override fun onViewAttachedToWindow(holder: CharactersViewHolder) {
+//        super.onViewAttachedToWindow(holder)
+//        val layoutPosition = holder.layoutPosition
+//        if(layoutPosition==characters.size-1 && !isPageLoading) {
+//            isPageLoading=true
+//            nextPage()
+//        }
+//    }
 
 }

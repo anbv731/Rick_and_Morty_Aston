@@ -10,10 +10,12 @@
 
         <menu>
 
-            <item android:id="@+id/action_type"
+            <item
+                android:id="@+id/action_type"
                 app:showAsAction="ifRoom"
                 android:title="@string/type" />
-            <item android:id="@+id/action_dimension"
+            <item
+                android:id="@+id/action_dimension"
                 app:showAsAction="ifRoom"
                 android:title="@string/dimension" />
 

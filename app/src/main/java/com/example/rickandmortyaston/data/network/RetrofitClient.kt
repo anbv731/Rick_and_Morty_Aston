@@ -4,7 +4,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 class RetrofitClient {
-    companion object{
+    companion object {
         private const val BASE_URL = "https://rickandmortyapi.com/api/"
     }
 

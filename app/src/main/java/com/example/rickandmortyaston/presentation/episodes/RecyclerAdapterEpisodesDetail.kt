@@ -17,7 +17,11 @@ class RecyclerAdapterEpisodesDetail(
         this.characters = list.toMutableList()
         notifyDataSetChanged()
     }
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):EpisodesCharactersViewHolder {
+
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): EpisodesCharactersViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemBinding.inflate(inflater)
         return EpisodesCharactersViewHolder(binding)
@@ -27,9 +31,9 @@ class RecyclerAdapterEpisodesDetail(
         val character = characters[position]
 
         holder.textViewName.text = (character.name)
-        holder.textViewSpecies.text=character.species
-        holder.textViewStatus.text=character.status
-        holder.textViewGender.text=character.gender
+        holder.textViewSpecies.text = character.species
+        holder.textViewStatus.text = character.status
+        holder.textViewGender.text = character.gender
         Glide.with(context)
             .load(character.image)
             .circleCrop()
@@ -43,12 +47,13 @@ class RecyclerAdapterEpisodesDetail(
         return characters.size
     }
 
-    class EpisodesCharactersViewHolder(binding: ItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    class EpisodesCharactersViewHolder(binding: ItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         val textViewName = binding.nameTextView
         val imageView = binding.imageView
         val cardView = binding.CardViewId
         val textViewSpecies = binding.speciesTextView
         val textViewStatus = binding.statusTextView
-        val textViewGender=binding.genderTextView
+        val textViewGender = binding.genderTextView
     }
 }

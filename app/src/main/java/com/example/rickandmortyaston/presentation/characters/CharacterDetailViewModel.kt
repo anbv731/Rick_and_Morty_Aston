@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.rickandmortyaston.domain.characters.*
+import com.example.rickandmortyaston.domain.characters.CharacterDomain
 import com.example.rickandmortyaston.domain.characters.use_cases.GetDBCharacterUseCase
 import com.example.rickandmortyaston.domain.episodes.EpisodeDomain
 import com.example.rickandmortyaston.domain.episodes.GetDBEpisodeUseCase
@@ -17,37 +17,39 @@ import javax.inject.Inject
 class CharacterDetailViewModel @Inject constructor(
     private val getDBCharacterUseCase: GetDBCharacterUseCase,
     private val getEpisodeUseCase: GetEpisodeUseCase,
-    private  val getDBEpisodeUseCase: GetDBEpisodeUseCase
+    private val getDBEpisodeUseCase: GetDBEpisodeUseCase
 ) : ViewModel() {
 
     private val _character = MutableLiveData<CharacterDomain>()
-    val character:LiveData<CharacterDomain>get() = _character
+    val character: LiveData<CharacterDomain> get() = _character
     private val _episodes = MutableLiveData<List<EpisodeDomain>>()
     val episodes: LiveData<List<EpisodeDomain>> get() = _episodes
     val errorMessage = MutableLiveData<String>()
 
-    fun getData(id:Int) {
+    fun getData(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 _character.postValue(getDBCharacterUseCase.execute(id))
 
             } catch (e: Exception) {
-                errorMessage.postValue( e.toString())
+                errorMessage.postValue(e.toString())
 
             }
         }
     }
+
     fun getEpisodes(character: CharacterDomain) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                _episodes.postValue( getEpisodeUseCase.execute(character.episode.map { it.toInt() }) )
+                _episodes.postValue(getEpisodeUseCase.execute(character.episode.map { it.toInt() }))
 
             } catch (e: Exception) {
                 errorMessage.postValue(e.message)
                 try {
                     _episodes.postValue(character.episode.map { getDBEpisodeUseCase.execute(it.toInt()) }
-                        .toList())
-                } catch (e: Exception) {}
+                        .toList().filterNotNull())
+                } catch (e: Exception) {
+                }
             }
         }
     }

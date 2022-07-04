@@ -11,12 +11,14 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.rickandmortyaston.R
 import com.example.rickandmortyaston.databinding.LocationsFragmentBinding
 import com.example.rickandmortyaston.di.RaMComponentProvider
 import com.example.rickandmortyaston.domain.locations.RequestLocation
+import com.example.rickandmortyaston.presentation.PaginationScrollListener
 import com.google.android.material.appbar.MaterialToolbar
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Job
@@ -35,7 +37,9 @@ class LocationsFragment : Fragment() {
     private lateinit var swipe: SwipeRefreshLayout
     private lateinit var dialog: DialogFragment
     private lateinit var toolbar: MaterialToolbar
-    private var filterId=0
+    private var filterId = 0
+    private var isLastPage: Boolean = false
+    private var isLoading: Boolean = false
 
 
     override fun onAttach(context: Context) {
@@ -46,7 +50,7 @@ class LocationsFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        requireActivity().nav_view.visibility=View.VISIBLE
+        requireActivity().nav_view.visibility = View.VISIBLE
     }
 
     override fun onCreateView(
@@ -73,11 +77,32 @@ class LocationsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = RecyclerAdapterLocations(requireContext(), { id -> toItem(id) }, { nextPage() })
+        adapter = RecyclerAdapterLocations { id -> toItem(id) }
+        val linearLayoutManager = LinearLayoutManager(requireContext())
+        recyclerView.layoutManager = linearLayoutManager
         recyclerView.adapter = adapter
+
+        recyclerView.addOnScrollListener(object : PaginationScrollListener(linearLayoutManager) {
+            override fun isLastPage(): Boolean {
+                return isLastPage
+            }
+
+            override fun isLoading(): Boolean {
+                return isLoading
+            }
+
+            override fun loadMoreItems() {
+                progressBar.visibility = View.VISIBLE
+                isLoading = true
+                viewModel.nextPage()
+            }
+        })
+
+
         setContent()
         swipe.setOnRefreshListener {
             viewModel.refreshData()
+            isLastPage = false
             swipe.isRefreshing = false
         }
         var queryTextChangedJob: Job? = null
@@ -100,10 +125,12 @@ class LocationsFragment : Fragment() {
 
     private fun setContent() {
         viewModel.locations.observe(viewLifecycleOwner) {
+            isLoading = false
             adapter.setList(it)
             progressBar.visibility = View.INVISIBLE
         }
         viewModel.errorMessage.observe(viewLifecycleOwner) {
+            isLastPage = true
             progressBar.visibility = View.INVISIBLE
             Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
         }
@@ -120,11 +147,6 @@ class LocationsFragment : Fragment() {
             ?.commit()
     }
 
-    private fun nextPage() {
-        progressBar.visibility = View.VISIBLE
-        viewModel.nextPage()
-    }
-
     private fun makeTypeList(): Bundle {
         val args = Bundle()
         val list = RequestLocation.typeLocations
@@ -133,6 +155,7 @@ class LocationsFragment : Fragment() {
         args.putInt("selected", selected)
         return args
     }
+
     private fun makeDimensionsList(): Bundle {
         val args = Bundle()
         val list = RequestLocation.dimension
@@ -142,18 +165,18 @@ class LocationsFragment : Fragment() {
         return args
     }
 
-    private fun filtration(item:Int) {
+    private fun filtration(item: Int) {
         dialog = DialogLocations()
-        when(item){
-            0->dialog.arguments = makeTypeList()
-            1->dialog.arguments = makeDimensionsList()
+        when (item) {
+            0 -> dialog.arguments = makeTypeList()
+            1 -> dialog.arguments = makeDimensionsList()
         }
-        filterId=item
+        filterId = item
         dialog.show(childFragmentManager, "Dialog")
     }
 
     fun input(value: Int) {
-        when(filterId) {
+        when (filterId) {
             0 -> viewModel.changeType(value)
             1 -> viewModel.changeDimension(value)
         }

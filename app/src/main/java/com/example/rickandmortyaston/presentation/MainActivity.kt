@@ -1,11 +1,9 @@
 package com.example.rickandmortyaston.presentation
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentContainerView
-import com.example.rickandmortyaston.presentation.characters.CharactersFragment
 import com.example.rickandmortyaston.R
+import com.example.rickandmortyaston.presentation.characters.CharactersFragment
 import com.example.rickandmortyaston.presentation.episodes.EpisodesFragment
 import com.example.rickandmortyaston.presentation.locations.LocationsFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -19,7 +17,7 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragmentPlace, CharactersFragment(), "CharactersFragment")
             .commit()
-setupNavigation()
+        setupNavigation()
     }
 
     private fun setupNavigation() {

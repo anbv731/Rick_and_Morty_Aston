@@ -11,11 +11,13 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.rickandmortyaston.R
 import com.example.rickandmortyaston.databinding.EpisodesFragmentBinding
 import com.example.rickandmortyaston.di.RaMComponentProvider
+import com.example.rickandmortyaston.presentation.PaginationScrollListener
 import com.google.android.material.appbar.MaterialToolbar
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Job
@@ -34,15 +36,18 @@ class EpisodesFragment : Fragment() {
     private lateinit var swipe: SwipeRefreshLayout
     private lateinit var dialog: DialogFragment
     private lateinit var toolbar: MaterialToolbar
+    private var isLastPage: Boolean = false
+    private var isLoading: Boolean = false
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         (requireActivity().application as RaMComponentProvider).provideRaMComponent()
             .injectEpisodesFragment(this)
     }
+
     override fun onResume() {
         super.onResume()
-        requireActivity().nav_view.visibility=View.VISIBLE
+        requireActivity().nav_view.visibility = View.VISIBLE
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,11 +78,31 @@ class EpisodesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = RecyclerAdapterEpisodes(requireContext(), { id -> toItem(id) }, { nextPage() })
+        adapter = RecyclerAdapterEpisodes { id -> toItem(id) }
+        val linearLayoutManager = LinearLayoutManager(requireContext())
+        recyclerView.layoutManager = linearLayoutManager
         recyclerView.adapter = adapter
+
+        recyclerView.addOnScrollListener(object : PaginationScrollListener(linearLayoutManager) {
+            override fun isLastPage(): Boolean {
+                return isLastPage
+            }
+
+            override fun isLoading(): Boolean {
+                return isLoading
+            }
+
+            override fun loadMoreItems() {
+                progressBar.visibility = View.VISIBLE
+                isLoading = true
+                viewModel.nextPage()
+            }
+        })
+
         setContent()
         swipe.setOnRefreshListener {
             viewModel.refreshData()
+            isLastPage = false
             swipe.isRefreshing = false
         }
         var queryTextChangedJob: Job? = null
@@ -100,10 +125,12 @@ class EpisodesFragment : Fragment() {
 
     private fun setContent() {
         viewModel.episodes.observe(viewLifecycleOwner) {
+            isLoading = false
             adapter.setList(it)
             progressBar.visibility = View.INVISIBLE
         }
         viewModel.errorMessage.observe(viewLifecycleOwner) {
+            isLastPage = true
             progressBar.visibility = View.INVISIBLE
             Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
         }
@@ -118,11 +145,6 @@ class EpisodesFragment : Fragment() {
             ?.replace(R.id.fragmentPlace, fragment, null)
             ?.addToBackStack(null)
             ?.commit()
-    }
-
-    private fun nextPage() {
-        progressBar.visibility = View.VISIBLE
-        viewModel.nextPage()
     }
 
     private fun makeListSeasons(): Bundle {

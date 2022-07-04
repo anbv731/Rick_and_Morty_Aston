@@ -7,10 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.rickandmortyaston.domain.characters.CharacterDomain
 import com.example.rickandmortyaston.domain.characters.use_cases.GetCharacterUseCase
 import com.example.rickandmortyaston.domain.characters.use_cases.GetDBCharacterUseCase
-import com.example.rickandmortyaston.domain.episodes.EpisodeDomain
-import com.example.rickandmortyaston.domain.episodes.GetDBEpisodeUseCase
 import com.example.rickandmortyaston.domain.locations.GetDBLocationUseCase
-import com.example.rickandmortyaston.domain.locations.GetDBLocationsUseCase
 import com.example.rickandmortyaston.domain.locations.GetLocationUseCase
 import com.example.rickandmortyaston.domain.locations.LocationDomain
 import kotlinx.coroutines.Dispatchers
@@ -35,13 +32,16 @@ class LocationDetailViewModel @Inject constructor(
             try {
                 _location.postValue(getDBLocationUseCase.execute(id))
             } catch (e: Exception) {
-                try{_location.postValue(getLocationUseCase.execute(id))}
-                catch (e:Exception){errorMessage.postValue("Check connection")}
+                try {
+                    _location.postValue(getLocationUseCase.execute(id))
+                } catch (e: Exception) {
+                    errorMessage.postValue("Check connection")
+                }
             }
         }
     }
 
-    fun getCharacters(location:LocationDomain) {
+    fun getCharacters(location: LocationDomain) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 _characters.postValue(getCharacterUseCase.execute(location.residents.map { it.toInt() }
@@ -50,7 +50,7 @@ class LocationDetailViewModel @Inject constructor(
                 errorMessage.postValue("Check connection")
                 try {
                     _characters.postValue(location.residents.map { getDBCharacterUseCase.execute(it.toInt()) }
-                        .toList())
+                        .toList().filterNotNull())
                 } catch (e: Exception) {
                 }
             }

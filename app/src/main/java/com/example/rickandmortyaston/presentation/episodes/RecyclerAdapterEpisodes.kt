@@ -1,6 +1,5 @@
 package com.example.rickandmortyaston.presentation.episodes
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -9,17 +8,13 @@ import com.example.rickandmortyaston.domain.episodes.EpisodeDomain
 
 
 class RecyclerAdapterEpisodes(
-    private val context: Context,
     private val toItem: (id: Int) -> Unit,
-    private val nextPage: () -> Unit
 ) :
     RecyclerView.Adapter<RecyclerAdapterEpisodes.EpisodesViewHolder>() {
     var episodes = mutableListOf<EpisodeDomain>()
-    private var isPageLoading = false
     fun setList(list: List<EpisodeDomain>) {
         this.episodes = list.toMutableList()
         notifyDataSetChanged()
-        isPageLoading = false
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EpisodesViewHolder {
@@ -49,16 +44,6 @@ class RecyclerAdapterEpisodes(
         val cardView = binding.CardViewId
         val textViewAirDate = binding.airDateTextView
         val textViewEpisode = binding.episodeTextView
-    }
-
-    override fun onViewAttachedToWindow(holder: EpisodesViewHolder) {
-        super.onViewAttachedToWindow(holder)
-        val layoutPosition = holder.layoutPosition
-        if (layoutPosition == episodes.size - 1 && !isPageLoading) {
-            println("isPageLoading " + isPageLoading)
-            isPageLoading = true
-            nextPage()
-        }
     }
 
 }
