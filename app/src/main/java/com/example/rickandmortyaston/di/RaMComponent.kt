@@ -9,9 +9,10 @@ import com.example.rickandmortyaston.presentation.locations.LocationDetailFragme
 import com.example.rickandmortyaston.presentation.locations.LocationsFragment
 import dagger.BindsInstance
 import dagger.Component
+import javax.inject.Singleton
 
-
-@Component(modules = [RaMModule::class])
+@Singleton
+@Component(modules = [RaMModule::class, DispatcherModule::class])
 interface RaMComponent {
 
     @Component.Factory

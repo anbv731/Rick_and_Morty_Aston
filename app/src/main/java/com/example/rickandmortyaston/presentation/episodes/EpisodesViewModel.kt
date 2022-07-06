@@ -6,10 +6,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.rickandmortyaston.R
+import com.example.rickandmortyaston.di.IoDispatcher
 import com.example.rickandmortyaston.domain.episodes.EpisodeDomain
-import com.example.rickandmortyaston.domain.episodes.GetDBEpisodesUseCase
-import com.example.rickandmortyaston.domain.episodes.GetEpisodesUseCase
 import com.example.rickandmortyaston.domain.episodes.RequestEpisodes
+import com.example.rickandmortyaston.domain.episodes.usecases.GetDBEpisodesUseCase
+import com.example.rickandmortyaston.domain.episodes.usecases.GetEpisodesUseCase
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,7 +19,8 @@ import javax.inject.Inject
 class EpisodesViewModel @Inject constructor(
     private val context: Context,
     private val getEpisodesUseCase: GetEpisodesUseCase,
-    private val getDBEpisodesUseCase: GetDBEpisodesUseCase
+    private val getDBEpisodesUseCase: GetDBEpisodesUseCase,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
     private val _episodes = MutableLiveData<List<EpisodeDomain>>()
     val episodes: LiveData<List<EpisodeDomain>> get() = _episodes
@@ -31,7 +34,7 @@ class EpisodesViewModel @Inject constructor(
 
     fun refreshData() {
         _episodes.postValue(emptyList())
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             try {
                 _episodes.postValue(getEpisodesUseCase.execute(true, false, request))
 
@@ -42,8 +45,8 @@ class EpisodesViewModel @Inject constructor(
         }
     }
 
-    fun searchData() {
-        viewModelScope.launch(Dispatchers.IO) {
+    private fun searchData() {
+        viewModelScope.launch(ioDispatcher) {
             try {
                 val response = getEpisodesUseCase.execute(false, false, request)
                 _episodes.postValue(response)
@@ -58,7 +61,7 @@ class EpisodesViewModel @Inject constructor(
     }
 
     fun nextPage() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             try {
                 _episodes.postValue(getEpisodesUseCase.execute(false, true, request))
             } catch (e: Exception) {

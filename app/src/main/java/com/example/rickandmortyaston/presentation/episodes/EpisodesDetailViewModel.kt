@@ -4,11 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.rickandmortyaston.di.IoDispatcher
 import com.example.rickandmortyaston.domain.characters.CharacterDomain
 import com.example.rickandmortyaston.domain.characters.use_cases.GetCharacterUseCase
 import com.example.rickandmortyaston.domain.characters.use_cases.GetDBCharacterUseCase
 import com.example.rickandmortyaston.domain.episodes.EpisodeDomain
-import com.example.rickandmortyaston.domain.episodes.GetDBEpisodeUseCase
+import com.example.rickandmortyaston.domain.episodes.usecases.GetDBEpisodeUseCase
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -16,7 +18,8 @@ import javax.inject.Inject
 class EpisodesDetailViewModel @Inject constructor(
     private val getDBEpisodeUseCase: GetDBEpisodeUseCase,
     private val getDBCharacterUseCase: GetDBCharacterUseCase,
-    private val getCharacterUseCase: GetCharacterUseCase
+    private val getCharacterUseCase: GetCharacterUseCase,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     private val _episode = MutableLiveData<EpisodeDomain>()
@@ -26,7 +29,7 @@ class EpisodesDetailViewModel @Inject constructor(
     val errorMessage = MutableLiveData<String>()
 
     fun getData(id: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             try {
                 _episode.postValue(getDBEpisodeUseCase.execute(id))
             } catch (e: Exception) {
@@ -36,7 +39,7 @@ class EpisodesDetailViewModel @Inject constructor(
     }
 
     fun getCharacters(episode: EpisodeDomain) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             try {
                 _characters.postValue(getCharacterUseCase.execute(episode.characters.map { it.toInt() }
                     .toList()))

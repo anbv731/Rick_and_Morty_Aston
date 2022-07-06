@@ -1,6 +1,5 @@
 package com.example.rickandmortyaston.presentation.characters
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -8,7 +7,6 @@ import com.example.rickandmortyaston.databinding.ItemEpisodesBinding
 import com.example.rickandmortyaston.domain.episodes.EpisodeDomain
 
 class RecyclerAdapterCharactersDetail(
-    private val context: Context,
     private val toItem: (id: Int) -> Unit
 ) : RecyclerView.Adapter<RecyclerAdapterCharactersDetail.CharactersDetailViewHolder>() {
     var episodes = mutableListOf<EpisodeDomain>()

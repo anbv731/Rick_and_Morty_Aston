@@ -59,7 +59,7 @@ class EpisodesRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getDBEpisode(id: Int): EpisodeDomain {
-        val result=database.episodesDao.getIdEpisode(id)
+        val result = database.episodesDao.getIdEpisode(id)
         return database.episodesDao.getIdEpisode(id)?.asDomainModel()
     }
 

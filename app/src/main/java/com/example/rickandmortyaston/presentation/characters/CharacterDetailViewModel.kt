@@ -5,21 +5,23 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.rickandmortyaston.di.IoDispatcher
 import com.example.rickandmortyaston.domain.characters.CharacterDomain
 import com.example.rickandmortyaston.domain.characters.use_cases.GetDBCharacterUseCase
 import com.example.rickandmortyaston.domain.episodes.EpisodeDomain
-import com.example.rickandmortyaston.domain.episodes.GetDBEpisodeUseCase
-import com.example.rickandmortyaston.domain.episodes.GetEpisodeUseCase
-import kotlinx.coroutines.Dispatchers
+import com.example.rickandmortyaston.domain.episodes.usecases.GetDBEpisodeUseCase
+import com.example.rickandmortyaston.domain.episodes.usecases.GetEpisodeUseCase
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class CharacterDetailViewModel @Inject constructor(
     private val getDBCharacterUseCase: GetDBCharacterUseCase,
     private val getEpisodeUseCase: GetEpisodeUseCase,
-    private val getDBEpisodeUseCase: GetDBEpisodeUseCase
-) : ViewModel() {
+    private val getDBEpisodeUseCase: GetDBEpisodeUseCase,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 
+) : ViewModel() {
     private val _character = MutableLiveData<CharacterDomain>()
     val character: LiveData<CharacterDomain> get() = _character
     private val _episodes = MutableLiveData<List<EpisodeDomain>>()
@@ -27,19 +29,19 @@ class CharacterDetailViewModel @Inject constructor(
     val errorMessage = MutableLiveData<String>()
 
     fun getData(id: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             try {
                 _character.postValue(getDBCharacterUseCase.execute(id))
 
             } catch (e: Exception) {
-                errorMessage.postValue(e.toString())
+                errorMessage.postValue(e.message)
 
             }
         }
     }
 
     fun getEpisodes(character: CharacterDomain) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             try {
                 _episodes.postValue(getEpisodeUseCase.execute(character.episode.map { it.toInt() }))
 

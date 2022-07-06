@@ -4,12 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.rickandmortyaston.di.IoDispatcher
 import com.example.rickandmortyaston.domain.characters.CharacterDomain
 import com.example.rickandmortyaston.domain.characters.use_cases.GetCharacterUseCase
 import com.example.rickandmortyaston.domain.characters.use_cases.GetDBCharacterUseCase
-import com.example.rickandmortyaston.domain.locations.GetDBLocationUseCase
-import com.example.rickandmortyaston.domain.locations.GetLocationUseCase
 import com.example.rickandmortyaston.domain.locations.LocationDomain
+import com.example.rickandmortyaston.domain.locations.usecases.GetDBLocationUseCase
+import com.example.rickandmortyaston.domain.locations.usecases.GetLocationUseCase
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,7 +20,8 @@ class LocationDetailViewModel @Inject constructor(
     private val getDBLocationUseCase: GetDBLocationUseCase,
     private val getLocationUseCase: GetLocationUseCase,
     private val getDBCharacterUseCase: GetDBCharacterUseCase,
-    private val getCharacterUseCase: GetCharacterUseCase
+    private val getCharacterUseCase: GetCharacterUseCase,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     private val _location = MutableLiveData<LocationDomain>()
@@ -28,7 +31,7 @@ class LocationDetailViewModel @Inject constructor(
     val errorMessage = MutableLiveData<String>()
 
     fun getData(id: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             try {
                 _location.postValue(getDBLocationUseCase.execute(id))
             } catch (e: Exception) {
@@ -42,7 +45,7 @@ class LocationDetailViewModel @Inject constructor(
     }
 
     fun getCharacters(location: LocationDomain) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             try {
                 _characters.postValue(getCharacterUseCase.execute(location.residents.map { it.toInt() }
                     .toList()))

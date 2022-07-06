@@ -67,5 +67,13 @@ dependencies {
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
     implementation 'com.google.android.material:material:1.7.0-alpha02'
 
+    testImplementation "io.mockk:mockk:1.12.4"
+
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0")
+//            {
+//
+////        exclude group: "org.jetbrains.kotlinx", module: "kotlinx-coroutines-debug"
+//    }
+    testImplementation("androidx.arch.core:core-testing:2.1.0")
 
 }

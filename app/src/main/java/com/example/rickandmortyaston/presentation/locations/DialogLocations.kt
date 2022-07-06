@@ -24,12 +24,12 @@ class DialogLocations : DialogFragment() {
             builder.setTitle("Filters")
                 .setSingleChoiceItems(
                     list, checkedItem
-                ) { dialog, item ->
+                ) { _, item ->
                     fragment?.input(item)
                 }
-                .setPositiveButton("Ok") { id, dialog ->
+                .setPositiveButton("Ok") { _, _ ->
                 }
-                .setNegativeButton("Clear") { dialog, id ->
+                .setNegativeButton("Clear") { _, _ ->
                     fragment?.input(-1)
                 }
 

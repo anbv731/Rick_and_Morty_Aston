@@ -6,9 +6,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.rickandmortyaston.R
+import com.example.rickandmortyaston.di.IoDispatcher
 import com.example.rickandmortyaston.domain.characters.*
 import com.example.rickandmortyaston.domain.characters.use_cases.GetCharactersUseCase
 import com.example.rickandmortyaston.domain.characters.use_cases.GetDBCharactersUseCase
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -16,7 +18,8 @@ import javax.inject.Inject
 class CharactersViewModel @Inject constructor(
     private val context: Context,
     private val getCharactersUseCase: GetCharactersUseCase,
-    private val getDBCharactersUseCase: GetDBCharactersUseCase
+    private val getDBCharactersUseCase: GetDBCharactersUseCase,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
     private val _characters = MutableLiveData<List<CharacterDomain>>()
     val characters: LiveData<List<CharacterDomain>> get() = _characters
@@ -30,7 +33,7 @@ class CharactersViewModel @Inject constructor(
 
     fun refreshData() {
         _characters.postValue(emptyList())
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             try {
                 _characters.postValue(getCharactersUseCase.execute(true, false, request))
 
@@ -45,8 +48,8 @@ class CharactersViewModel @Inject constructor(
         }
     }
 
-    fun searchData() {
-        viewModelScope.launch(Dispatchers.IO) {
+    private fun searchData() {
+        viewModelScope.launch(ioDispatcher) {
             try {
                 val response = getCharactersUseCase.execute(false, false, request)
                 _characters.postValue(response)
@@ -65,7 +68,7 @@ class CharactersViewModel @Inject constructor(
     }
 
     fun nextPage() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             try {
                 _characters.postValue(getCharactersUseCase.execute(false, true, request))
             } catch (e: Exception) {

@@ -6,10 +6,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.rickandmortyaston.R
-import com.example.rickandmortyaston.domain.locations.GetDBLocationsUseCase
-import com.example.rickandmortyaston.domain.locations.GetLocationsUseCase
+import com.example.rickandmortyaston.di.IoDispatcher
 import com.example.rickandmortyaston.domain.locations.LocationDomain
 import com.example.rickandmortyaston.domain.locations.RequestLocation
+import com.example.rickandmortyaston.domain.locations.usecases.GetDBLocationsUseCase
+import com.example.rickandmortyaston.domain.locations.usecases.GetLocationsUseCase
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,7 +19,8 @@ import javax.inject.Inject
 class LocationsViewModel @Inject constructor(
     private val context: Context,
     private val getLocationsUseCase: GetLocationsUseCase,
-    private val getDBLocationsUseCase: GetDBLocationsUseCase
+    private val getDBLocationsUseCase: GetDBLocationsUseCase,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
     private val _locations = MutableLiveData<List<LocationDomain>>()
     val locations: LiveData<List<LocationDomain>> get() = _locations
@@ -31,7 +34,7 @@ class LocationsViewModel @Inject constructor(
 
     fun refreshData() {
         _locations.postValue(emptyList())
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             try {
                 _locations.postValue(getLocationsUseCase.execute(true, false, request))
 
@@ -42,8 +45,8 @@ class LocationsViewModel @Inject constructor(
         }
     }
 
-    fun searchData() {
-        viewModelScope.launch(Dispatchers.IO) {
+    private fun searchData() {
+        viewModelScope.launch(ioDispatcher) {
             try {
                 val response = getLocationsUseCase.execute(false, false, request)
                 _locations.postValue(response)
@@ -58,7 +61,7 @@ class LocationsViewModel @Inject constructor(
     }
 
     fun nextPage() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             try {
                 _locations.postValue(getLocationsUseCase.execute(false, true, request))
             } catch (e: Exception) {

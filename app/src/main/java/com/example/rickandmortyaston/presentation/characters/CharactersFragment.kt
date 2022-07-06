@@ -17,7 +17,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.rickandmortyaston.R
 import com.example.rickandmortyaston.databinding.CharactersFragmentBinding
 import com.example.rickandmortyaston.di.RaMComponentProvider
-import com.example.rickandmortyaston.domain.characters.*
+import com.example.rickandmortyaston.domain.characters.Gender
+import com.example.rickandmortyaston.domain.characters.Species
+import com.example.rickandmortyaston.domain.characters.Status
+import com.example.rickandmortyaston.domain.characters.Type
 import com.example.rickandmortyaston.presentation.PaginationScrollListener
 import com.google.android.material.appbar.MaterialToolbar
 import kotlinx.android.synthetic.main.activity_main.*
@@ -37,7 +40,6 @@ class CharactersFragment : Fragment() {
     private lateinit var swipe: SwipeRefreshLayout
     private lateinit var dialog: DialogFragment
     private lateinit var toolbar: MaterialToolbar
-    private lateinit var list: List<CharacterDomain>
     private var filterId = 0
     private var isLastPage: Boolean = false
     private var isLoading: Boolean = false

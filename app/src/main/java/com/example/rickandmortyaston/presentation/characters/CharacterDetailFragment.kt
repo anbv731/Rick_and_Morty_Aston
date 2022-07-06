@@ -73,7 +73,7 @@ class CharacterDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val adapter = RecyclerAdapterCharactersDetail(requireContext()) { id -> toItem(id) }
+        val adapter = RecyclerAdapterCharactersDetail { id -> toItem(id) }
         recycler.adapter = adapter
         val requestId: Int? = arguments?.getInt(ARGUMENT)
         if (requestId != null) {
